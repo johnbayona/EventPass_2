@@ -1,0 +1,20 @@
+{
+  "sheets": {
+    "EP01_Usuarios": "REEMPLAZAR_ID_EP01_Usuarios",
+    "EP02_Sesiones": "REEMPLAZAR_ID_EP02_Sesiones",
+    "EP03_Telegram": "REEMPLAZAR_ID_EP03_Telegram",
+    "EP04_Eventos": "REEMPLAZAR_ID_EP04_Eventos",
+    "EP05_Catalogo_Log": "REEMPLAZAR_ID_EP05_Catalogo_Log",
+    "EP06_Inscripciones": "REEMPLAZAR_ID_EP06_Inscripciones",
+    "EP07_Reasignaciones": "REEMPLAZAR_ID_EP07_Reasignaciones",
+    "EP08_Recordatorios": "REEMPLAZAR_ID_EP08_Recordatorios",
+    "EP09_Notificaciones": "REEMPLAZAR_ID_EP09_Notificaciones",
+    "EP10_Soporte": "REEMPLAZAR_ID_EP10_Soporte"
+  },
+  "sessionHours": 8,
+  "linkMinutes": 10,
+  "reminderHours": 24,
+  "eventTimezoneOffset": "-05:00",
+  "workflowNotificaciones": "SELECCIONAR_WF09_EN_EL_NODO",
+  "frontendOrigin": "http://localhost:5173"
+}

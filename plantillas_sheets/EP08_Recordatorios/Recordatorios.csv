@@ -1,0 +1,1 @@
+﻿recordatorio_id,usuario_id,evento_id,inscripcion_id,tipo_recordatorio,fecha_programada,fecha_envio,estado,clave_idempotencia

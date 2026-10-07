@@ -1,0 +1,2 @@
+﻿inscripcion_id,usuario_id,evento_id,estado,fecha_inscripcion,fecha_actualizacion,nombre_acreditacion,observaciones,origen,orden_espera
+INS_DEMO_LLENO,USR_DEMO_OCUPANTE,EVT_DEMO_02,CONFIRMADA,2026-10-06T19:13:26.929396-05:00,2026-10-06T19:13:26.929396-05:00,Participante de demostración,Fixture para representar evento lleno; no es un usuario real,DEMO,

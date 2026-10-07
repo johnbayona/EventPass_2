@@ -1,0 +1,464 @@
+{
+  "name": "WF05_catalogo_publico — Emprende365",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "eventpass/catalogo",
+        "responseMode": "responseNode",
+        "options": {
+          "allowedOrigins": "http://localhost:5173"
+        }
+      },
+      "id": "f7aced30-8a5b-4453-9d57-187b7a00bdfe",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        0,
+        0
+      ],
+      "webhookId": "302e14f3-f7cb-46c4-a483-dfa3787e8e39"
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "// EDITA SOLO config. Los IDs de Sheets son públicos identificadores, no credenciales.\nconst config = {\n  \"sheets\": {\n    \"EP01_Usuarios\": \"REEMPLAZAR_ID_EP01_Usuarios\",\n    \"EP02_Sesiones\": \"REEMPLAZAR_ID_EP02_Sesiones\",\n    \"EP03_Telegram\": \"REEMPLAZAR_ID_EP03_Telegram\",\n    \"EP04_Eventos\": \"REEMPLAZAR_ID_EP04_Eventos\",\n    \"EP05_Catalogo_Log\": \"REEMPLAZAR_ID_EP05_Catalogo_Log\",\n    \"EP06_Inscripciones\": \"REEMPLAZAR_ID_EP06_Inscripciones\",\n    \"EP07_Reasignaciones\": \"REEMPLAZAR_ID_EP07_Reasignaciones\",\n    \"EP08_Recordatorios\": \"REEMPLAZAR_ID_EP08_Recordatorios\",\n    \"EP09_Notificaciones\": \"REEMPLAZAR_ID_EP09_Notificaciones\",\n    \"EP10_Soporte\": \"REEMPLAZAR_ID_EP10_Soporte\"\n  },\n  \"sessionHours\": 8,\n  \"linkMinutes\": 10,\n  \"reminderHours\": 24,\n  \"eventTimezoneOffset\": \"-05:00\",\n  \"workflowNotificaciones\": \"SELECCIONAR_WF09_EN_EL_NODO\",\n  \"frontendOrigin\": \"http://localhost:5173\"\n};\nconst raw = $input.first().json;\nconst telegram = !!raw.message;\nconst request = telegram ? {text:raw.message.text || ''} : (raw.body || raw);\nreturn [{json:{config,request,headers:raw.headers||{},mode:telegram?'telegram':'http',chat_id:telegram?String(raw.message.chat.id):'',chat_type:raw.message?.chat?.type||'',telegram_username:raw.message?.from?.username||''}}];\n"
+      },
+      "id": "811940d5-6dec-4471-bea7-204424fbb4e9",
+      "name": "Configuración",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        300,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "sheet",
+        "operation": "read",
+        "documentId": {
+          "__rl": true,
+          "value": "={{ $('Configuración').first().json.config.sheets.EP04_Eventos }}",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Eventos",
+          "mode": "name"
+        },
+        "options": {
+          "returnFirstMatch": false
+        }
+      },
+      "id": "a1931b87-4ba4-4403-92a1-e8e2041f985d",
+      "name": "Leer Eventos",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        600,
+        0
+      ],
+      "alwaysOutputData": true,
+      "notes": "Selecciona tu credencial Google Sheets OAuth2. Lectura completa para persistencia académica. Always Output Data permite hojas sin filas."
+    },
+    {
+      "parameters": {
+        "resource": "sheet",
+        "operation": "read",
+        "documentId": {
+          "__rl": true,
+          "value": "={{ $('Configuración').first().json.config.sheets.EP06_Inscripciones }}",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Inscripciones",
+          "mode": "name"
+        },
+        "options": {
+          "returnFirstMatch": false
+        }
+      },
+      "id": "906b1bdc-6688-4eeb-95c4-1af5bd4432f2",
+      "name": "Leer Inscripciones",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        900,
+        0
+      ],
+      "alwaysOutputData": true,
+      "notes": "Selecciona tu credencial Google Sheets OAuth2. Lectura completa para persistencia académica. Always Output Data permite hojas sin filas."
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "const SCHEMAS={\"Usuarios\": [\"usuario_id\", \"nombre\", \"email_normalizado\", \"password_hash\", \"password_salt\", \"estado\", \"fecha_registro\", \"fecha_actualizacion\"], \"Auditoria_Usuarios\": [\"auditoria_id\", \"usuario_id\", \"accion\", \"fecha\", \"resultado\", \"detalle\"], \"Sesiones\": [\"session_id\", \"usuario_id\", \"session_token\", \"creada_en\", \"expira_en\", \"estado\", \"cerrada_en\", \"ultima_validacion\"], \"Codigos_Vinculacion\": [\"codigo_id\", \"usuario_id\", \"codigo\", \"creado_en\", \"expira_en\", \"estado\", \"usado_en\"], \"Vinculaciones\": [\"vinculacion_id\", \"usuario_id\", \"chat_id\", \"telegram_username\", \"fecha_vinculacion\", \"estado\"], \"Eventos\": [\"evento_id\", \"nombre\", \"categoria\", \"descripcion\", \"fecha\", \"hora\", \"lugar\", \"capacidad\", \"imagen_url\", \"organizador\", \"estado\", \"fecha_creacion\", \"fecha_actualizacion\"], \"Auditoria_Eventos\": [\"auditoria_id\", \"evento_id\", \"accion\", \"fecha\", \"resultado\", \"detalle\"], \"Consultas_Catalogo\": [\"consulta_id\", \"fecha\", \"tipo\", \"evento_id\", \"categoria\", \"resultado_count\", \"visitor_id\", \"status_http\"], \"Inscripciones\": [\"inscripcion_id\", \"usuario_id\", \"evento_id\", \"estado\", \"fecha_inscripcion\", \"fecha_actualizacion\", \"nombre_acreditacion\", \"observaciones\", \"origen\", \"orden_espera\"], \"Auditoria_Inscripciones\": [\"auditoria_id\", \"inscripcion_id\", \"usuario_id\", \"evento_id\", \"accion\", \"estado_anterior\", \"estado_nuevo\", \"fecha\", \"resultado\", \"detalle\"], \"Reasignaciones\": [\"reasignacion_id\", \"evento_id\", \"inscripcion_id\", \"usuario_id\", \"fecha\", \"orden_lista\", \"estado_anterior\", \"estado_nuevo\", \"resultado_notificacion\"], \"Recordatorios\": [\"recordatorio_id\", \"usuario_id\", \"evento_id\", \"inscripcion_id\", \"tipo_recordatorio\", \"fecha_programada\", \"fecha_envio\", \"estado\", \"clave_idempotencia\"], \"Notificaciones\": [\"notificacion_id\", \"usuario_id\", \"tipo\", \"titulo\", \"mensaje\", \"evento_id\", \"inscripcion_id\", \"fecha\", \"gmail_estado\", \"telegram_estado\", \"gmail_error\", \"telegram_error\", \"clave_idempotencia\"], \"Conversaciones\": [\"conversation_id\", \"usuario_id\", \"visitor_id\", \"fecha_inicio\", \"fecha_ultima_interaccion\", \"estado\"], \"Mensajes\": [\"message_id\", \"conversation_id\", \"usuario_id\", \"visitor_id\", \"rol\", \"mensaje\", \"timestamp\"]};\nconst crypto = require('crypto');\nconst ctx = $('Configuración').first().json;\nconst req = ctx.request || {};\nconst cfg = ctx.config;\nconst now = new Date();\nconst iso = now.toISOString();\nconst writes = {};\nconst notifications = [];\nlet status = 200;\nlet response = {};\nfunction rows(sheet) {\n  return $('Leer ' + sheet).all().map(x => x.json).filter(x => x && Object.keys(x).some(k => k !== 'row_number'));\n}\nfunction id(prefix) { return prefix + '_' + crypto.randomUUID(); }\nfunction put(sheet, row) {\n  const cols = SCHEMAS[sheet];\n  const clean = {};\n  for (const k of cols) clean[k] = row[k] === undefined || row[k] === null ? '' : row[k];\n  (writes[sheet] ||= []).push(clean);\n  return clean;\n}\nfunction fail(code, message) { const e = new Error(message); e.http = code; throw e; }\nfunction text(value, name, min=1, max=200) {\n  if (typeof value !== 'string') fail(400, name + ' debe ser texto');\n  const s = value.trim();\n  if (s.length < min || s.length > max) fail(400, name + ' tiene una longitud inválida');\n  return s;\n}\nfunction email(value) {\n  const s = text(value, 'email', 3, 254).toLowerCase();\n  if (!/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(s)) fail(400, 'Email inválido');\n  return s;\n}\nfunction number(value, name, min=0, max=100000) {\n  if (value === '' || value === null || value === undefined || typeof value === 'boolean') fail(400, name + ' es obligatorio');\n  const n = Number(value);\n  if (!Number.isInteger(n) || n < min || n > max) fail(400, name + ' inválido');\n  return n;\n}\nfunction publicUser(u) {\n  const { usuario_id, nombre, email_normalizado, estado, fecha_registro, fecha_actualizacion } = u;\n  return { usuario_id, nombre, email_normalizado, estado, fecha_registro, fecha_actualizacion };\n}\nfunction token() {\n  return String(ctx.headers?.authorization || '').replace(/^Bearer\\s+/i, '').trim() || String(req.session_token || '').trim();\n}\nfunction auth() {\n  const t = token();\n  if (!t) fail(401, 'Sesión requerida');\n  const s = rows('Sesiones').find(x => x.session_token === t);\n  if (!s || s.estado !== 'ACTIVA' || !Number.isFinite(Date.parse(s.expira_en)) || Date.parse(s.expira_en) <= now.getTime()) fail(401, 'Sesión inválida o expirada');\n  const u = rows('Usuarios').find(x => x.usuario_id === s.usuario_id && x.estado === 'ACTIVO');\n  if (!u) fail(401, 'Usuario inactivo o inexistente');\n  if (req.usuario_id && req.usuario_id !== u.usuario_id) fail(403, 'No puedes acceder al perfil de otra persona');\n  return { user:u, session:s };\n}\nfunction linked(uid) { return rows('Vinculaciones').find(x => x.usuario_id === uid && x.estado === 'ACTIVA'); }\nfunction eventTime(e) {\n  const s = String(e.fecha) + 'T' + String(e.hora).slice(0,5) + ':00' + cfg.eventTimezoneOffset;\n  const t = Date.parse(s);\n  if (!Number.isFinite(t)) fail(400, 'Fecha u hora del evento inválida');\n  return t;\n}\nfunction activeRegistration(r) { return ['CONFIRMADA','LISTA_ESPERA'].includes(r.estado); }\nfunction available(e, registrations) {\n  return Math.max(0, Number(e.capacidad) - registrations.filter(r => r.evento_id === e.evento_id && r.estado === 'CONFIRMADA').length);\n}\nfunction notify(uid, type, title, message, eid='', iid='', key='') {\n  notifications.push({usuario_id:uid,tipo:type,titulo:title,mensaje:message,evento_id:eid,inscripcion_id:iid,clave_idempotencia:key || [uid,type,eid,iid,iso].join('|')});\n}\nfunction auditUser(uid, action, detail) {\n  put('Auditoria_Usuarios',{auditoria_id:id('AUD'),usuario_id:uid,accion:action,fecha:iso,resultado:'EXITOSO',detalle:detail});\n}\nfunction auditRegistration(r, action, previous) {\n  put('Auditoria_Inscripciones',{auditoria_id:id('AUD'),inscripcion_id:r.inscripcion_id,usuario_id:r.usuario_id,evento_id:r.evento_id,accion:action,estado_anterior:previous,estado_nuevo:r.estado,fecha:iso,resultado:'EXITOSO',detalle:'Operación validada en n8n'});\n}\nfunction result() { return [{json:{writes,notifications,status,response,mode:ctx.mode,chat_id:ctx.chat_id || ''}}]; }\n\ntry {\n  const op=String(req.operacion||'listado').toLowerCase();\n  if(!['listado','detalle','filtro'].includes(op)) fail(400,'Operación permitida: listado, detalle, filtro');\n  let events=rows('Eventos').filter(e=>['PUBLICADO','CERRADO','CANCELADO'].includes(e.estado));\n  if(op==='detalle') {\n    if(!req.evento_id) fail(400,'evento_id requerido');\n    events=events.filter(e=>e.evento_id===req.evento_id);\n    if(!events.length) fail(404,'Evento no encontrado o no publicable');\n  }\n  if(op==='filtro' || req.categoria) {\n    const category=text(req.categoria,'categoria',2,80).toLowerCase();\n    events=events.filter(e=>e.categoria.toLowerCase()===category);\n  }\n  const registrations=rows('Inscripciones');\n  const data=events.map(e=>({...e,capacidad:Number(e.capacidad),cupos_disponibles:available(e,registrations),acepta_inscripciones:e.estado==='PUBLICADO' && eventTime(e)>now.getTime()})).sort((a,b)=>eventTime(a)-eventTime(b));\n  response=op==='detalle'?{ok:true,evento:data[0]}:{ok:true,eventos:data,total:data.length};\n} catch(e) {status=e.http||500;response={ok:false,mensaje:e.http?e.message:'Error interno; revisa la ejecución en n8n'};}\nput('Consultas_Catalogo',{consulta_id:id('CON'),fecha:iso,tipo:String(req.operacion||'listado').toUpperCase(),evento_id:req.evento_id||'',categoria:req.categoria||'',resultado_count:response.total??(response.evento?1:0),visitor_id:String(req.visitor_id||id('VIS')).slice(0,100),status_http:status});\nreturn result();\n"
+      },
+      "id": "fb99d25f-b2c0-4ef3-8900-e992936e69c3",
+      "name": "Reglas de negocio",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1200,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "const plan=$('Reglas de negocio').first().json; const list=plan.writes?.['Consultas_Catalogo']||[]; return list.length?list.map(json=>({json})):[{json:{_skip:true}}];"
+      },
+      "id": "b907a355-a219-410c-baf6-006463a357c2",
+      "name": "Preparar Consultas_Catalogo",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1500,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "45c3998b-2978-4bd7-8c1e-574d9f09c228",
+              "leftValue": "={{ !$json._skip }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "8bb1daf4-8e67-49b6-afeb-828f9586f8ae",
+      "name": "¿Escribir Consultas_Catalogo?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1800,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "sheet",
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "value": "={{ $('Configuración').first().json.config.sheets.EP05_Catalogo_Log }}",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Consultas_Catalogo",
+          "mode": "name"
+        },
+        "options": {
+          "cellFormat": "RAW",
+          "useAppend": true
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "consulta_id": "={{ $json.consulta_id }}",
+            "fecha": "={{ $json.fecha }}",
+            "tipo": "={{ $json.tipo }}",
+            "evento_id": "={{ $json.evento_id }}",
+            "categoria": "={{ $json.categoria }}",
+            "resultado_count": "={{ $json.resultado_count }}",
+            "visitor_id": "={{ $json.visitor_id }}",
+            "status_http": "={{ $json.status_http }}"
+          },
+          "matchingColumns": [
+            "consulta_id"
+          ],
+          "schema": [
+            {
+              "id": "consulta_id",
+              "displayName": "consulta_id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "fecha",
+              "displayName": "fecha",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "tipo",
+              "displayName": "tipo",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "evento_id",
+              "displayName": "evento_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "categoria",
+              "displayName": "categoria",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "resultado_count",
+              "displayName": "resultado_count",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "visitor_id",
+              "displayName": "visitor_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "status_http",
+              "displayName": "status_http",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "id": "7ef7bb52-a234-4deb-890c-9d7fa44bfb4e",
+      "name": "Guardar Consultas_Catalogo",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        0,
+        300
+      ],
+      "alwaysOutputData": true,
+      "notes": "Selecciona tu credencial Google Sheets OAuth2. Escritura con clave estable y valores RAW."
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "return [{json:$('Reglas de negocio').first().json}];"
+      },
+      "id": "e59d58cb-5d33-4a7f-90ff-5ed81839e240",
+      "name": "Continuar Consultas_Catalogo",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        300,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $('Reglas de negocio').first().json.response }}",
+        "options": {
+          "responseCode": "={{ $('Reglas de negocio').first().json.status }}",
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Cache-Control",
+                "value": "no-store"
+              }
+            ]
+          }
+        }
+      },
+      "id": "8073e902-8fb7-415b-9bc8-6c1085b908b2",
+      "name": "Responder JSON",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        600,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## WF05_catalogo_publico\n1. Edita Configuración: IDs de Sheets.\n2. Selecciona credenciales en cada integración.\n3. Configura WF09 en Execute Sub-workflow.\n4. Lee README y prueba antes de publicar.\nGenerado para importar; no verificado contra tu Docker.\nUsuarios existentes: el hash debe usar scrypt compatible.",
+        "height": 250,
+        "width": 520
+      },
+      "id": "457a5e3c-b2bb-43af-9efd-a61ae8c48045",
+      "name": "LEER ANTES DE ACTIVAR",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        0,
+        -330
+      ]
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Configuración",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Configuración": {
+      "main": [
+        [
+          {
+            "node": "Leer Eventos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Leer Eventos": {
+      "main": [
+        [
+          {
+            "node": "Leer Inscripciones",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Leer Inscripciones": {
+      "main": [
+        [
+          {
+            "node": "Reglas de negocio",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Reglas de negocio": {
+      "main": [
+        [
+          {
+            "node": "Preparar Consultas_Catalogo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Preparar Consultas_Catalogo": {
+      "main": [
+        [
+          {
+            "node": "¿Escribir Consultas_Catalogo?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "¿Escribir Consultas_Catalogo?": {
+      "main": [
+        [
+          {
+            "node": "Guardar Consultas_Catalogo",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Continuar Consultas_Catalogo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Guardar Consultas_Catalogo": {
+      "main": [
+        [
+          {
+            "node": "Continuar Consultas_Catalogo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Continuar Consultas_Catalogo": {
+      "main": [
+        [
+          {
+            "node": "Responder JSON",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "America/Bogota",
+    "saveDataSuccessExecution": "none",
+    "saveDataErrorExecution": "none",
+    "saveManualExecutions": false,
+    "executionTimeout": 300
+  },
+  "pinData": {},
+  "tags": [],
+  "meta": {
+    "templateCredsSetupCompleted": false
+  }
+}

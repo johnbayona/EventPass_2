@@ -1,0 +1,10 @@
+.env
+.env.*
+!.env.example
+node_modules/
+dist/
+configuracion.local.json
+n8n_configurados/
+__pycache__/
+test-results/
+.vercel/

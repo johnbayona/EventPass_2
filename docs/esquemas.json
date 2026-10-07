@@ -1,0 +1,203 @@
+{
+  "Usuarios": {
+    "documento": "EP01_Usuarios",
+    "columnas": [
+      "usuario_id",
+      "nombre",
+      "email_normalizado",
+      "password_hash",
+      "password_salt",
+      "estado",
+      "fecha_registro",
+      "fecha_actualizacion"
+    ]
+  },
+  "Auditoria_Usuarios": {
+    "documento": "EP01_Usuarios",
+    "columnas": [
+      "auditoria_id",
+      "usuario_id",
+      "accion",
+      "fecha",
+      "resultado",
+      "detalle"
+    ]
+  },
+  "Sesiones": {
+    "documento": "EP02_Sesiones",
+    "columnas": [
+      "session_id",
+      "usuario_id",
+      "session_token",
+      "creada_en",
+      "expira_en",
+      "estado",
+      "cerrada_en",
+      "ultima_validacion"
+    ]
+  },
+  "Codigos_Vinculacion": {
+    "documento": "EP03_Telegram",
+    "columnas": [
+      "codigo_id",
+      "usuario_id",
+      "codigo",
+      "creado_en",
+      "expira_en",
+      "estado",
+      "usado_en"
+    ]
+  },
+  "Vinculaciones": {
+    "documento": "EP03_Telegram",
+    "columnas": [
+      "vinculacion_id",
+      "usuario_id",
+      "chat_id",
+      "telegram_username",
+      "fecha_vinculacion",
+      "estado"
+    ]
+  },
+  "Eventos": {
+    "documento": "EP04_Eventos",
+    "columnas": [
+      "evento_id",
+      "nombre",
+      "categoria",
+      "descripcion",
+      "fecha",
+      "hora",
+      "lugar",
+      "capacidad",
+      "imagen_url",
+      "organizador",
+      "estado",
+      "fecha_creacion",
+      "fecha_actualizacion"
+    ]
+  },
+  "Auditoria_Eventos": {
+    "documento": "EP04_Eventos",
+    "columnas": [
+      "auditoria_id",
+      "evento_id",
+      "accion",
+      "fecha",
+      "resultado",
+      "detalle"
+    ]
+  },
+  "Consultas_Catalogo": {
+    "documento": "EP05_Catalogo_Log",
+    "columnas": [
+      "consulta_id",
+      "fecha",
+      "tipo",
+      "evento_id",
+      "categoria",
+      "resultado_count",
+      "visitor_id",
+      "status_http"
+    ]
+  },
+  "Inscripciones": {
+    "documento": "EP06_Inscripciones",
+    "columnas": [
+      "inscripcion_id",
+      "usuario_id",
+      "evento_id",
+      "estado",
+      "fecha_inscripcion",
+      "fecha_actualizacion",
+      "nombre_acreditacion",
+      "observaciones",
+      "origen",
+      "orden_espera"
+    ]
+  },
+  "Auditoria_Inscripciones": {
+    "documento": "EP06_Inscripciones",
+    "columnas": [
+      "auditoria_id",
+      "inscripcion_id",
+      "usuario_id",
+      "evento_id",
+      "accion",
+      "estado_anterior",
+      "estado_nuevo",
+      "fecha",
+      "resultado",
+      "detalle"
+    ]
+  },
+  "Reasignaciones": {
+    "documento": "EP07_Reasignaciones",
+    "columnas": [
+      "reasignacion_id",
+      "evento_id",
+      "inscripcion_id",
+      "usuario_id",
+      "fecha",
+      "orden_lista",
+      "estado_anterior",
+      "estado_nuevo",
+      "resultado_notificacion"
+    ]
+  },
+  "Recordatorios": {
+    "documento": "EP08_Recordatorios",
+    "columnas": [
+      "recordatorio_id",
+      "usuario_id",
+      "evento_id",
+      "inscripcion_id",
+      "tipo_recordatorio",
+      "fecha_programada",
+      "fecha_envio",
+      "estado",
+      "clave_idempotencia"
+    ]
+  },
+  "Notificaciones": {
+    "documento": "EP09_Notificaciones",
+    "columnas": [
+      "notificacion_id",
+      "usuario_id",
+      "tipo",
+      "titulo",
+      "mensaje",
+      "evento_id",
+      "inscripcion_id",
+      "fecha",
+      "gmail_estado",
+      "telegram_estado",
+      "gmail_error",
+      "telegram_error",
+      "clave_idempotencia"
+    ]
+  },
+  "Conversaciones": {
+    "documento": "EP10_Soporte",
+    "columnas": [
+      "conversation_id",
+      "usuario_id",
+      "visitor_id",
+      "fecha_inicio",
+      "fecha_ultima_interaccion",
+      "estado"
+    ]
+  },
+  "Mensajes": {
+    "documento": "EP10_Soporte",
+    "columnas": [
+      "message_id",
+      "conversation_id",
+      "usuario_id",
+      "visitor_id",
+      "rol",
+      "mensaje",
+      "timestamp"
+    ]
+  }
+}

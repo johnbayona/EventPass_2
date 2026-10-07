@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#101522">
+  <meta name="description" content="EventPass Emprende365: eventos para aprender, conectar y hacer crecer tu emprendimiento.">
+  <title>EventPass · Emprende365</title>
+  <link rel="icon" href="./favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <a class="skip" href="#contenido">Saltar al contenido</a>
+  <header class="header"><div class="container nav-wrap">
+    <a class="brand" href="#/" aria-label="EventPass Emprende365, inicio"><span class="brand-mark">e<span>p</span></span><span>EventPass<small>EMPRENDE365</small></span></a>
+    <button id="menu-toggle" class="icon-button mobile-only" aria-label="Abrir menú" aria-expanded="false" aria-controls="navigation">☰</button>
+    <nav id="navigation" aria-label="Principal"></nav>
+  </div></header>
+  <main id="contenido" tabindex="-1"><div id="view" aria-live="polite"></div></main>
+  <footer class="footer"><div class="container footer-inner"><a class="brand" href="#/">EventPass<span class="muted">Emprende365</span></a><p>Ideas que se encuentran. Negocios que crecen.</p><span>Hecho para emprender.</span></div></footer>
+  <div id="toasts" class="toasts" role="status" aria-live="polite"></div>
+  <button id="chat-toggle" class="chat-toggle" aria-label="Abrir asistente EventPass" aria-haspopup="dialog">✦ <span>Pregúntale a EventPass</span></button>
+  <dialog id="chat-dialog" class="chat-panel" aria-labelledby="chat-title">
+    <header class="chat-head"><div><span class="eyebrow">ESTAMOS PARA AYUDARTE</span><h2 id="chat-title">EventPass Assistant <span class="online-dot"></span></h2></div><button id="chat-close" class="icon-button" aria-label="Cerrar asistente">×</button></header>
+    <div id="chat-messages" class="chat-messages" role="log" aria-live="polite"><p class="bubble assistant">Hola. Te ayudo a descubrir eventos y a entender cómo inscribirte o vincular Telegram. ¿Qué te gustaría saber?</p></div>
+    <form id="chat-form" class="chat-form"><label class="sr-only" for="chat-input">Tu pregunta</label><input id="chat-input" name="message" maxlength="2000" placeholder="Escribe tu pregunta…" required autocomplete="off"><button class="button primary" type="submit" aria-label="Enviar pregunta">↑</button></form>
+    <p class="chat-foot">Asistente informativo. No realiza inscripciones ni cambios de cuenta.</p>
+  </dialog>
+  <dialog id="confirm-dialog" class="confirm-panel" aria-labelledby="confirm-title"><form method="dialog"><h2 id="confirm-title"></h2><p id="confirm-message"></p><div class="actions"><button class="button secondary" value="no">Volver</button><button id="confirm-accept" class="button danger" value="yes">Confirmar</button></div></form></dialog>
+  <script type="module" src="./app.js"></script>
+</body>
+</html>
