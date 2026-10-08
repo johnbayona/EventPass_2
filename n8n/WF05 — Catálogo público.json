@@ -1,0 +1,493 @@
+{
+  "name": "WF05 — Catálogo público",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "eventpass/catalogo",
+        "responseMode": "responseNode",
+        "options": {
+          "allowedOrigins": "http://localhost:5173"
+        }
+      },
+      "id": "ab56058b-9c58-4bd8-a093-8a82bc8f28a8",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        208,
+        1216
+      ],
+      "webhookId": "302e14f3-f7cb-46c4-a483-dfa3787e8e39"
+    },
+    {
+      "parameters": {
+        "jsCode": "// EDITA SOLO config. Los IDs de Sheets son públicos identificadores, no credenciales.\nconst config = {\n  \"sheets\": {\n    \"EP01_Usuarios\": \"10GNs5mk6rcwvB2uFBeSgQC3_c1xpEuDmPwOm79lzZm4\",\n    \"EP02_Sesiones\": \"1_1_0buDCtklJDvIGBSo53S1yRFazZyShY3a_2WZae3A\",\n    \"EP03_Telegram\": \"1lh37TRoZXLp6aGvqu2oAlrzbqLiM3li_O5tfioWFt6Y\",\n    \"EP04_Eventos\": \"1EOUz26SJx3YJDMqf1kar4us3HbkdjbOy9OrHtV3RO6Y\",\n    \"EP05_Catalogo_Log\": \"1fMyl2ii43NK02RCE2yJyYslYzIVaIIa1Sp5Ec7-FMJE\",\n    \"EP06_Inscripciones\": \"1cFQwBhsM7j9gq5G4e_S3Fs8acBRXibuxNsCCGmd_u7o\",\n    \"EP07_Reasignaciones\": \"1cY_2gjiithr4nvWdjQcYaTDwF_-q2Topm0HhTIHvP1g\",\n    \"EP08_Recordatorios\": \"1hC4YF3H2uOheexZrTbYz0D4966H6X2HoZbGKiIE1Wvw\",\n    \"EP09_Notificaciones\": \"1OIWc-saMHFfSuHP-Ge7u40BVAP_XwoqMMHFABAarSdg\",\n    \"EP10_Soporte\": \"1NgEHnYSKAw8JLpzi-11Rmu6pDnW_Oh50QMFPV4BchCs\"\n  },\n  \"sessionHours\": 8,\n  \"linkMinutes\": 10,\n  \"reminderHours\": 24,\n  \"eventTimezoneOffset\": \"-05:00\",\n  \"workflowNotificaciones\": \"SELECCIONAR_WF09_EN_EL_NODO\",\n  \"frontendOrigin\": \"http://localhost:5173\"\n};\nconst raw = $input.first().json;\nconst telegram = !!raw.message;\nconst request = telegram ? {text:raw.message.text || ''} : (raw.body || raw);\nreturn [{json:{config,request,headers:raw.headers||{},mode:telegram?'telegram':'http',chat_id:telegram?String(raw.message.chat.id):'',chat_type:raw.message?.chat?.type||'',telegram_username:raw.message?.from?.username||''}}];\n"
+      },
+      "id": "d611bdb9-95c9-4475-873c-1b020cb2766b",
+      "name": "Configuración",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        512,
+        1216
+      ]
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1EOUz26SJx3YJDMqf1kar4us3HbkdjbOy9OrHtV3RO6Y",
+          "mode": "list",
+          "cachedResultName": "EP04_Eventos",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1EOUz26SJx3YJDMqf1kar4us3HbkdjbOy9OrHtV3RO6Y/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Eventos",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1EOUz26SJx3YJDMqf1kar4us3HbkdjbOy9OrHtV3RO6Y/edit#gid=0"
+        },
+        "options": {}
+      },
+      "id": "33d124f2-f920-4941-b748-eecbd64eb88f",
+      "name": "Leer Eventos",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        816,
+        1200
+      ],
+      "alwaysOutputData": true,
+      "executeOnce": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "55L4jOkLMnG2B3fi",
+          "name": "Google Sheets account"
+        }
+      },
+      "notes": "Selecciona tu credencial Google Sheets OAuth2. Lectura completa para persistencia académica. Always Output Data permite hojas sin filas."
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1cFQwBhsM7j9gq5G4e_S3Fs8acBRXibuxNsCCGmd_u7o",
+          "mode": "list",
+          "cachedResultName": "EP06_Inscripciones",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1cFQwBhsM7j9gq5G4e_S3Fs8acBRXibuxNsCCGmd_u7o/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Inscripciones",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1cFQwBhsM7j9gq5G4e_S3Fs8acBRXibuxNsCCGmd_u7o/edit#gid=0"
+        },
+        "options": {}
+      },
+      "id": "6cf7c691-bb3e-4033-9686-74a7349f6d5a",
+      "name": "Leer Inscripciones",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1120,
+        1216
+      ],
+      "alwaysOutputData": true,
+      "executeOnce": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "55L4jOkLMnG2B3fi",
+          "name": "Google Sheets account"
+        }
+      },
+      "notes": "Selecciona tu credencial Google Sheets OAuth2. Lectura completa para persistencia académica. Always Output Data permite hojas sin filas."
+    },
+    {
+      "parameters": {
+        "jsCode": "const ctx = $('Configuración').first().json;\nconst request = ctx.request;\nconst req = request && typeof request === 'object' && !Array.isArray(request) ? request : {};\nconst cfg = ctx.config;\nconst seed = $('Generar ID consulta').first().json.consulta_uuid;\nif (!seed) throw new Error('Falta consulta_uuid en Generar ID consulta');\nconst now = new Date();\nconst iso = now.toISOString();\nlet status = 200;\nlet response;\nconst eventColumns = ['evento_id','nombre','categoria','descripcion','fecha','hora','lugar','capacidad','imagen_url','organizador','estado','fecha_creacion','fecha_actualizacion'];\nfunction fail(code, message) { const error = new Error(message); error.http = code; throw error; }\nfunction rows(sheet) {\n  return $('Leer ' + sheet).all().map(item => item.json)\n    .filter(row => row && Object.keys(row).some(key => key !== 'row_number'));\n}\nfunction eventTime(event) {\n  const date = String(event.fecha || '');\n  const hour = String(event.hora || '').slice(0,5);\n  if (!/^\\d{4}-\\d{2}-\\d{2}$/.test(date) || !/^([01]\\d|2[0-3]):[0-5]\\d$/.test(hour)) fail(500, 'Fecha u hora inválida en Eventos; revisa WF04');\n  const calendar = new Date(date + 'T12:00:00Z');\n  if (!Number.isFinite(calendar.getTime()) || calendar.toISOString().slice(0,10) !== date) fail(500, 'Fecha inválida en Eventos; revisa WF04');\n  const value = Date.parse(date + 'T' + hour + ':00' + cfg.eventTimezoneOffset);\n  if (!Number.isFinite(value)) fail(500, 'Zona horaria inválida en Configuración');\n  return value;\n}\nconst op = String(req.operacion || 'listado').trim().toLowerCase();\ntry {\n  if (!request || typeof request !== 'object' || Array.isArray(request)) fail(400, 'Envía un objeto JSON');\n  if (!['listado','detalle','filtro'].includes(op)) fail(400, 'Operación permitida: listado, detalle, filtro');\n  let events = rows('Eventos').filter(event =>\n    ['PUBLICADO','CERRADO','CANCELADO'].includes(event.estado) &&\n    String(event.categoria || '').trim().toUpperCase() === 'EMPRENDIMIENTO');\n  if (op === 'detalle') {\n    if (typeof req.evento_id !== 'string' || !req.evento_id.trim()) fail(400, 'evento_id requerido');\n    events = events.filter(event => event.evento_id === req.evento_id.trim());\n    if (!events.length) fail(404, 'Evento no encontrado o no publicable');\n  }\n  if (op === 'filtro' || req.categoria !== undefined) {\n    if (typeof req.categoria !== 'string' || req.categoria.trim().length < 2 || req.categoria.trim().length > 80) fail(400, 'categoria debe ser texto entre 2 y 80 caracteres');\n    const category = req.categoria.trim().toUpperCase();\n    events = events.filter(event => String(event.categoria).trim().toUpperCase() === category);\n    if (op === 'detalle' && !events.length) fail(404, 'Evento no encontrado en esa categoría');\n  }\n  const registrations = rows('Inscripciones');\n  const confirmed = new Map();\n  for (const r of registrations) if (r.estado === 'CONFIRMADA') confirmed.set(r.evento_id, (confirmed.get(r.evento_id) || 0) + 1);\n  const data = events.map(event => {\n    const timestamp = eventTime(event);\n    const capacity = Number(event.capacidad);\n    if (!Number.isInteger(capacity) || capacity < 1) fail(500, 'Capacidad inválida en Eventos; revisa WF04');\n    const clean = {};\n    for (const key of eventColumns) clean[key] = event[key] ?? '';\n    return {...clean, capacidad:capacity, cupos_disponibles:Math.max(0, capacity - (confirmed.get(event.evento_id) || 0)), acepta_inscripciones:event.estado === 'PUBLICADO' && timestamp > now.getTime()};\n  }).sort((a,b) => eventTime(a) - eventTime(b));\n  response = op === 'detalle' ? {ok:true, evento:data[0]} : {ok:true, eventos:data, total:data.length};\n} catch(error) {\n  status = error.http || 500;\n  response = {ok:false, mensaje:error.http ? error.message : 'Error interno; revisa la ejecución en n8n'};\n}\nconst log = {\n  consulta_id:'CON_' + seed, fecha:iso, tipo:op.toUpperCase().slice(0,30),\n  evento_id:String(req.evento_id || '').slice(0,150), categoria:String(req.categoria || '').slice(0,80),\n  resultado_count:response.total ?? (response.evento ? 1 : 0),\n  visitor_id:String(req.visitor_id || ('VIS_' + seed)).slice(0,100), status_http:status\n};\nreturn [{json:{writes:{Consultas_Catalogo:[log]},notifications:[],status,response,mode:'http',chat_id:''}}];\n"
+      },
+      "id": "e68855c5-9e6f-41df-88d3-bc7d77d8df0e",
+      "name": "Reglas de negocio",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1408,
+        1216
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const plan=$('Reglas de negocio').first().json; const list=plan.writes?.['Consultas_Catalogo']||[]; return list.length?list.map(json=>({json})):[{json:{_skip:true}}];"
+      },
+      "id": "a1d4a3cc-b3e4-4114-90a0-6fe13eafc8ce",
+      "name": "Preparar Consultas_Catalogo",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1712,
+        1216
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "45c3998b-2978-4bd7-8c1e-574d9f09c228",
+              "leftValue": "={{ !$json._skip }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "ce5c5297-9e6f-4d7d-8de3-3c5eb9fe59f7",
+      "name": "¿Escribir Consultas_Catalogo?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        2016,
+        1216
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "value": "1fMyl2ii43NK02RCE2yJyYslYzIVaIIa1Sp5Ec7-FMJE",
+          "mode": "list",
+          "cachedResultName": "EP05_Catalogo_Log",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1fMyl2ii43NK02RCE2yJyYslYzIVaIIa1Sp5Ec7-FMJE/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Consultas_Catalogo",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1fMyl2ii43NK02RCE2yJyYslYzIVaIIa1Sp5Ec7-FMJE/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "consulta_id": "={{ $json.consulta_id }}",
+            "fecha": "={{ $json.fecha }}",
+            "tipo": "={{ $json.tipo }}",
+            "evento_id": "={{ $json.evento_id }}",
+            "categoria": "={{ $json.categoria }}",
+            "resultado_count": "={{ $json.resultado_count }}",
+            "visitor_id": "={{ $json.visitor_id }}",
+            "status_http": "={{ $json.status_http }}"
+          },
+          "matchingColumns": [
+            "consulta_id"
+          ],
+          "schema": [
+            {
+              "id": "consulta_id",
+              "displayName": "consulta_id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "fecha",
+              "displayName": "fecha",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "tipo",
+              "displayName": "tipo",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "evento_id",
+              "displayName": "evento_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "categoria",
+              "displayName": "categoria",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "resultado_count",
+              "displayName": "resultado_count",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "visitor_id",
+              "displayName": "visitor_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "status_http",
+              "displayName": "status_http",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {
+          "cellFormat": "RAW",
+          "useAppend": true
+        }
+      },
+      "id": "3beb775e-ff90-4d92-986b-2b508d848b70",
+      "name": "Guardar Consultas_Catalogo",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        208,
+        1520
+      ],
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "55L4jOkLMnG2B3fi",
+          "name": "Google Sheets account"
+        }
+      },
+      "notes": "Selecciona tu credencial Google Sheets OAuth2. Escritura con clave estable y valores RAW."
+    },
+    {
+      "parameters": {
+        "jsCode": "return [{json:$('Reglas de negocio').first().json}];"
+      },
+      "id": "6f9bfa4d-f32a-481e-8369-3e39b4cd50b2",
+      "name": "Continuar Consultas_Catalogo",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        512,
+        1520
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $('Reglas de negocio').first().json.response }}",
+        "options": {
+          "responseCode": "={{ $('Reglas de negocio').first().json.status }}",
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Cache-Control",
+                "value": "no-store"
+              }
+            ]
+          }
+        }
+      },
+      "id": "fa20731c-072b-4dc7-a79d-8bf5e3ca382d",
+      "name": "Responder JSON",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        816,
+        1520
+      ]
+    },
+    {
+      "parameters": {
+        "action": "generate",
+        "dataPropertyName": "consulta_uuid"
+      },
+      "id": "c7d544e3-280e-485f-b3ea-7331d61136d6",
+      "name": "Generar ID consulta",
+      "type": "n8n-nodes-base.crypto",
+      "typeVersion": 1,
+      "position": [
+        656,
+        720
+      ]
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Configuración",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Configuración": {
+      "main": [
+        [
+          {
+            "node": "Generar ID consulta",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Leer Eventos": {
+      "main": [
+        [
+          {
+            "node": "Leer Inscripciones",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Leer Inscripciones": {
+      "main": [
+        [
+          {
+            "node": "Reglas de negocio",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Reglas de negocio": {
+      "main": [
+        [
+          {
+            "node": "Preparar Consultas_Catalogo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Preparar Consultas_Catalogo": {
+      "main": [
+        [
+          {
+            "node": "¿Escribir Consultas_Catalogo?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "¿Escribir Consultas_Catalogo?": {
+      "main": [
+        [
+          {
+            "node": "Guardar Consultas_Catalogo",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Continuar Consultas_Catalogo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Guardar Consultas_Catalogo": {
+      "main": [
+        [
+          {
+            "node": "Continuar Consultas_Catalogo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Continuar Consultas_Catalogo": {
+      "main": [
+        [
+          {
+            "node": "Responder JSON",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generar ID consulta": {
+      "main": [
+        [
+          {
+            "node": "Leer Eventos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "59eae52a-c57a-4d90-8e7d-deb599040001",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "8870ad36925f8f4776afd66fcc7d35e30431f422812b897599ebae4cef0121f7"
+  },
+  "nodeGroups": [],
+  "id": "DRb39CeIbBMso8MV",
+  "tags": []
+}

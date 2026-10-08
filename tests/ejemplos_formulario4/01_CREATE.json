@@ -1,0 +1,14 @@
+{
+  "operacion": "CREATE",
+  "evento_id": "",
+  "nombre": "Taller: crea tu primera tienda virtual",
+  "categoria": "EMPRENDIMIENTO",
+  "descripcion": "Taller práctico para definir productos, precios y ventas de una tienda virtual.",
+  "fecha": "2026-11-20",
+  "hora": "18:00",
+  "lugar": "Salón Emprende365",
+  "capacidad": "20",
+  "imagen_url": "",
+  "organizador": "Emprende365",
+  "estado": "BORRADOR"
+}

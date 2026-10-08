@@ -1,0 +1,1 @@
+52 comprobaciones locales correctas. Entradas simuladas, no consulta real a Sheets. Falta prueba en n8n del usuario y respuesta HTTP real. Se conservó acepta_inscripciones=true en eventos futuros PUBLICADO aun con cupos cero para permitir gestión posterior de lista de espera.
