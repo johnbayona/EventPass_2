@@ -1,1 +1,0 @@
-46 comprobaciones locales correctas. Reglas ejecutadas en Node.js con entradas simuladas. Conexiones y referencias verificadas. Falta ejecutar en el n8n del usuario con Google Sheets y Basic Auth. WF09 requiere configuración y prueba real antes de cambios con inscripciones activas.

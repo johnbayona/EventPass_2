@@ -14,7 +14,7 @@ export function getConfig(){
     n8nBaseUrl:get('VITE_N8N_BASE_URL').replace(/\/+$/,''),
     chatUrl:get('VITE_EVENTPASS_CHAT_URL'),
     telegramBotUsername:get('VITE_TELEGRAM_BOT_USERNAME').replace(/^@/,''),
-    endpoints:{usuarios:get('VITE_USUARIOS_URL'),auth:get('VITE_AUTH_URL'),telegram:get('VITE_TELEGRAM_URL'),catalogo:get('VITE_CATALOGO_URL'),inscripciones:get('VITE_INSCRIPCIONES_URL')}
+    endpoints:{usuarios:get('VITE_USUARIOS_URL'),auth:get('VITE_AUTH_URL'),telegram:get('VITE_TELEGRAM_URL'),catalogo:get('VITE_CATALOGO_URL'),inscripciones:get('VITE_INSCRIPCIONES_URL'),checkin:get('VITE_CHECKIN_URL')}
   };
 }
 export function configModule(){return 'export default '+JSON.stringify(getConfig(),null,2)+';\n';}

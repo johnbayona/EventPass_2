@@ -1,0 +1,6 @@
+{
+  "operacion": "actualizar",
+  "inscripcion_id": "REEMPLAZAR_INSCRIPCION_ID_REAL",
+  "nombre_acreditacion": "Nombre actualizado de prueba",
+  "observaciones": "Datos actualizados desde VS Code"
+}

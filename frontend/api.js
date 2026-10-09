@@ -1,6 +1,6 @@
 import config from './config.js';
 export const CONFIG=config;
-const paths={usuarios:'usuarios',auth:'auth',telegram:'telegram',catalogo:'catalogo',inscripciones:'inscripciones'};
+const paths={usuarios:'usuarios',auth:'auth',telegram:'telegram',catalogo:'catalogo',inscripciones:'inscripciones',checkin:'checkin'};
 export class ApiError extends Error{constructor(message,status=0){super(message);this.name='ApiError';this.status=status;}}
 export function endpoint(domain){
   const override=config.endpoints?.[domain];

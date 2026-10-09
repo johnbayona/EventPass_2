@@ -1,0 +1,80 @@
+{
+  "name": "TEST — WF09 — llamada manual",
+  "nodes": [
+    {
+      "id": "cacd4bdc-e106-4b47-8fc9-6f0523ef5f73",
+      "name": "Ejecutar prueba",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "7e3b6070-04cb-4310-962c-a2077bfeb5ef",
+      "name": "Datos de prueba",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        320,
+        0
+      ],
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "const usuario_id='REEMPLAZAR_USUARIO_ID';\nif(usuario_id.startsWith('REEMPLAZAR'))throw new Error('Escribe un usuario_id real en Datos de prueba');\nreturn [{json:{usuario_id,tipo:'PRUEBA_WF09',titulo:'Prueba de notificaciones EventPass',mensaje:'Prueba de integración: Gmail y Telegram.',evento_id:'',inscripcion_id:'',clave_idempotencia:'PRUEBA_WF09|'+usuario_id+'|01'}}];"
+      }
+    },
+    {
+      "id": "683a639a-5c4a-4159-a199-f53e3e79fbc2",
+      "name": "Llamar WF09",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        640,
+        0
+      ],
+      "parameters": {
+        "source": "database",
+        "workflowId": {
+          "__rl": true,
+          "value": "SELECCIONAR_WF09",
+          "mode": "id"
+        },
+        "mode": "once",
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Ejecutar prueba": {
+      "main": [
+        [
+          {
+            "node": "Datos de prueba",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Datos de prueba": {
+      "main": [
+        [
+          {
+            "node": "Llamar WF09",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  }
+}

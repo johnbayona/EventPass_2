@@ -86,7 +86,7 @@ async function inscriptions(ticket){
  const sorted=[...list].sort((a,b)=>new Date(b.fecha_inscripcion)-new Date(a.fecha_inscripcion));
  view.innerHTML=page('Tu agenda de nuevas posibilidades.','Consulta tus reservas, actualiza tu acreditación y organiza tu próximo paso.',sorted.length?`<div class="registration-list">${sorted.map(r=>{
   const event=events.find(e=>e.evento_id===r.evento_id);const active=['CONFIRMADA','LISTA_ESPERA'].includes(r.estado);const manageable=active&&(!event||(eventDate(event)?.getTime()>Date.now()&&event.estado!=='CANCELADO'));
-  return `<article class="registration-card"><div class="registration-main"><div class="registration-icon">${r.estado==='CONFIRMADA'?'↗':r.estado==='LISTA_ESPERA'?'◷':'×'}</div><div><span class="status ${r.estado==='CONFIRMADA'?'active':r.estado==='LISTA_ESPERA'?'waiting':'closed'}">${esc(stateLabel(r.estado))}</span><h2>${esc(event?.nombre||'Evento '+r.evento_id)}</h2><p>${event?esc(dateLabel(event))+' · '+esc(timeLabel(event))+' · '+esc(event.lugar):'Los detalles del evento no están disponibles en este momento.'}</p><small>Acreditación: ${esc(r.nombre_acreditacion)}</small>${r.estado==='LISTA_ESPERA'?'<p class="wait-note">Tu lugar se asignará por orden de inscripción cuando se libere un cupo. Te avisaremos.</p>':''}</div></div><div class="registration-actions">${event?`<a class="button secondary small" href="#/evento/${encodeURIComponent(r.evento_id)}">Ver evento ↗</a>`:''}${manageable?`<button class="text-danger" data-action="cancel-registration" data-id="${esc(r.inscripcion_id)}">Cancelar inscripción</button>`:''}</div>${manageable?`<details class="registration-edit"><summary>Editar datos de acreditación</summary><form data-form="editar-inscripcion" data-id="${esc(r.inscripcion_id)}"><p class="form-error" role="alert" tabindex="-1" hidden></p><div class="form-row"><label>Nombre de acreditación<input name="nombre_acreditacion" value="${esc(r.nombre_acreditacion)}" minlength="2" maxlength="100" required></label><label>Observaciones<input name="observaciones" value="${esc(r.observaciones)}" maxlength="500"></label></div><button class="button secondary small" type="submit">Guardar cambios</button></form></details>`:''}</article>`;
+  return `<article class="registration-card"><div class="registration-main"><div class="registration-icon">${r.estado==='CONFIRMADA'?'↗':r.estado==='LISTA_ESPERA'?'◷':'×'}</div><div><span class="status ${r.estado==='CONFIRMADA'?'active':r.estado==='LISTA_ESPERA'?'waiting':'closed'}">${esc(stateLabel(r.estado))}</span><h2>${esc(event?.nombre||'Evento '+r.evento_id)}</h2><p>${event?esc(dateLabel(event))+' · '+esc(timeLabel(event))+' · '+esc(event.lugar):'Los detalles del evento no están disponibles en este momento.'}</p><small>Acreditación: ${esc(r.nombre_acreditacion)}</small>${r.estado==='LISTA_ESPERA'?'<p class="wait-note">Tu lugar se asignará por orden de inscripción cuando se libere un cupo. Te avisaremos.</p>':''}</div></div><div class="registration-actions">${['CONFIRMADA','ASISTIO'].includes(r.estado)?`<a class="button secondary small" href="#/checkin?inscripcion_id=${encodeURIComponent(r.inscripcion_id)}&evento_id=${encodeURIComponent(r.evento_id)}">Check-in</a>`:''}${event?`<a class="button secondary small" href="#/evento/${encodeURIComponent(r.evento_id)}">Ver evento ↗</a>`:''}${manageable?`<button class="text-danger" data-action="cancel-registration" data-id="${esc(r.inscripcion_id)}">Cancelar inscripción</button>`:''}</div>${manageable?`<details class="registration-edit"><summary>Editar datos de acreditación</summary><form data-form="editar-inscripcion" data-id="${esc(r.inscripcion_id)}"><p class="form-error" role="alert" tabindex="-1" hidden></p><div class="form-row"><label>Nombre de acreditación<input name="nombre_acreditacion" value="${esc(r.nombre_acreditacion)}" minlength="2" maxlength="100" required></label><label>Observaciones<input name="observaciones" value="${esc(r.observaciones)}" maxlength="500"></label></div><button class="button secondary small" type="submit">Guardar cambios</button></form></details>`:''}</article>`;
  }).join('')}</div>`:empty('Tu primera experiencia te espera','Aún no tienes inscripciones. Explora el catálogo y encuentra tu próximo encuentro.'));
 }
 async function route(){
@@ -100,6 +100,7 @@ async function route(){
   else if(path==='/perfil')await profile(ticket);
   else if(path==='/telegram')await telegram(ticket);
   else if(path==='/inscripciones')await inscriptions(ticket);
+  else if(path==='/checkin'){if(authGuard())checkinPage();}
   else view.innerHTML=page('Este camino aún no existe.','Volvamos a un lugar conocido.',empty('Página no encontrada','Explora las oportunidades disponibles.'));
  }catch(e){if(ticket!==state.ticket)return;if(e.status===401&&state.token){clearSession();toast('Tu sesión terminó. Ingresa nuevamente.','error');location.hash='/login';}else errorView(e);}
 }
@@ -110,9 +111,13 @@ function confirmAction(title,message,accept){return new Promise(resolve=>{
 function notificationFeedback(data){if(notificationWarning(data.notificaciones))toast('La operación se guardó, pero uno de los avisos no pudo enviarse. Consulta tu inscripción aquí.','error');}
 document.addEventListener('submit',async event=>{
  const form=event.target;if(!form.matches('form[data-form]'))return;event.preventDefault();clearError(form);
+ const previousResult=form.querySelector('#checkin-result');if(previousResult)previousResult.textContent='';
  const type=form.dataset.form;const fields=Object.fromEntries(new FormData(form));const buttons=[...form.querySelectorAll('button')];buttons.forEach(b=>b.disabled=true);form.setAttribute('aria-busy','true');
  try{
-  if(type==='registro'){
+  if(type==='checkin'){
+   const data=await request('checkin',{inscripcion_id:fields.inscripcion_id.trim(),evento_id:fields.evento_id.trim()},state.token);
+   form.querySelector('#checkin-result').textContent=data.mensaje+(data.aviso_pendiente?' La asistencia se guardó; revisa el envío de notificaciones.':'')+(data.advertencia?' '+data.advertencia:'');
+  }else if(type==='registro'){
    if(fields.password!==fields.confirm_password)throw new Error('Las contraseñas no coinciden.');
    await request('usuarios',{operacion:'crear',nombre:fields.nombre,email:fields.email,password:fields.password});
    toast('Tu cuenta está creada. Ya puedes ingresar.');location.hash='/login';
@@ -190,3 +195,8 @@ async function start(){
  await route();
 }
 start();
+
+function checkinPage(){
+ const q=new URLSearchParams(location.hash.split('?')[1]||'');
+ view.innerHTML=page('Check-in digital','Registra tu asistencia con los datos de tu inscripción.',`<section class="form-panel"><form data-form="checkin"><p class="form-error" role="alert" tabindex="-1" hidden></p><label>ID de inscripción<input name="inscripcion_id" value="${esc(q.get('inscripcion_id')||'')}" required maxlength="120"></label><label>ID del evento<input name="evento_id" value="${esc(q.get('evento_id')||'')}" required maxlength="120"></label><button class="button primary" type="submit">Registrar ingreso</button><p id="checkin-result" role="status" aria-live="polite"></p></form><a href="#/inscripciones">Volver a mis inscripciones</a></section>`);
+}
