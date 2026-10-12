@@ -1,0 +1,11 @@
+Revisión 12 de octubre de 2026
+13 pruebas frontend: PASAN.
+14 pruebas reglas WF11 y WF09: PASAN.
+2 pruebas WF05: tres categorías, filtro Educación y cupo ocupado ASISTIO: PASAN.
+20 recorridos DOM en memoria con API simulada: PASAN (incluye éxito, duplicado, rechazo y regreso tras login).
+11 workflows JSON parseables. Configuración y módulos pendientes documentados.
+Build de frontend: PASA. No incluye configuración real de n8n.
+HTTP local /, /examen/, /config.js: 200.
+Revisión visual en navegador: NO COMPLETADA. Chromium no estaba disponible y su descarga falló. Pruebas de navegador preparadas en tests/browser.mjs, no acreditadas.
+Servicios reales n8n/Sheets/Gmail/Telegram: NO EJECUTADOS desde este entorno.
+No se modificó Docker, no se escribieron datos en Sheets, no se publicó en Vercel ni se hicieron commits en tu repositorio.

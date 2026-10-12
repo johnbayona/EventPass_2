@@ -1,0 +1,86 @@
+[
+  {
+    "nombre": "Crea tu tienda virtual",
+    "categoria": "Emprendimiento",
+    "descripcion": "Convierte tu idea en una tienda: propuesta de valor, catálogo y primeros clientes.",
+    "fecha": "2026-10-19",
+    "hora": "15:36",
+    "lugar": "Bogotá — espacio de pruebas",
+    "capacidad": 30,
+    "imagen_url": "",
+    "organizador": "EventPass Emprende365",
+    "estado": "PUBLICADO"
+  },
+  {
+    "nombre": "Clínica de modelos de negocio",
+    "categoria": "Emprendimiento",
+    "descripcion": "Valida tu propuesta y recibe retroalimentación en una mentoría práctica.",
+    "fecha": "2026-10-20",
+    "hora": "15:36",
+    "lugar": "Bogotá — espacio de pruebas",
+    "capacidad": 1,
+    "imagen_url": "",
+    "organizador": "EventPass Emprende365",
+    "estado": "PUBLICADO"
+  },
+  {
+    "nombre": "Finanzas para emprender",
+    "categoria": "Educación",
+    "descripcion": "Aprende a calcular costos, precios y flujo de caja con ejercicios guiados.",
+    "fecha": "2026-10-13",
+    "hora": "03:36",
+    "lugar": "Bogotá — espacio de pruebas",
+    "capacidad": 20,
+    "imagen_url": "",
+    "organizador": "EventPass Emprende365",
+    "estado": "PUBLICADO"
+  },
+  {
+    "nombre": "Marketing digital desde cero",
+    "categoria": "Educación",
+    "descripcion": "Diseña una campaña y conoce herramientas para medir sus resultados.",
+    "fecha": "2026-10-22",
+    "hora": "15:36",
+    "lugar": "Bogotá — espacio de pruebas",
+    "capacidad": 25,
+    "imagen_url": "",
+    "organizador": "EventPass Emprende365",
+    "estado": "PUBLICADO"
+  },
+  {
+    "nombre": "Encuentro de aliados",
+    "categoria": "Networking",
+    "descripcion": "Conoce proveedores y emprendedores para construir nuevas alianzas.",
+    "fecha": "2026-10-24",
+    "hora": "15:36",
+    "lugar": "Bogotá — espacio de pruebas",
+    "capacidad": 15,
+    "imagen_url": "",
+    "organizador": "EventPass Emprende365",
+    "estado": "PUBLICADO"
+  },
+  {
+    "nombre": "Ronda comercial de la comunidad",
+    "categoria": "Networking",
+    "descripcion": "Presenta tu negocio y comparte oportunidades con la comunidad.",
+    "fecha": "2026-10-26",
+    "hora": "15:36",
+    "lugar": "Bogotá — espacio de pruebas",
+    "capacidad": 15,
+    "imagen_url": "",
+    "organizador": "EventPass Emprende365",
+    "estado": "PUBLICADO"
+  },
+  {
+    "nombre": "Laboratorio de ideas — cancelado",
+    "categoria": "Emprendimiento",
+    "descripcion": "Caso de prueba de evento cancelado: no debe admitir inscripciones.",
+    "fecha": "2026-10-27",
+    "hora": "15:36",
+    "lugar": "Bogotá — espacio de pruebas",
+    "capacidad": 10,
+    "imagen_url": "",
+    "organizador": "EventPass Emprende365",
+    "estado": "CANCELADO"
+  }
+]

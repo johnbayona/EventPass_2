@@ -1,7 +1,7 @@
 import config from './config.js';
 export const CONFIG=config;
 const paths={usuarios:'usuarios',auth:'auth',telegram:'telegram',catalogo:'catalogo',inscripciones:'inscripciones',checkin:'checkin'};
-export class ApiError extends Error{constructor(message,status=0){super(message);this.name='ApiError';this.status=status;}}
+export class ApiError extends Error{constructor(message,status=0,data=null){super(message);this.name='ApiError';this.status=status;this.data=data;}}
 export function endpoint(domain){
   const override=config.endpoints?.[domain];
   const raw=override||(config.n8nBaseUrl?config.n8nBaseUrl.replace(/\/+$/,'')+'/webhook/eventpass/'+paths[domain]:'');
@@ -15,7 +15,7 @@ export async function post(url,payload,{token='',timeout=45000,fetchImpl=fetch}=
     const result=await fetchImpl(url,{method:'POST',headers,body:JSON.stringify(payload),signal:controller.signal,cache:'no-store',credentials:'omit'});
     let data;try{data=await result.json();}catch{throw new ApiError('El servicio devolvió una respuesta inesperada. Intenta nuevamente.',result.status);}
     if(Array.isArray(data)&&data.length===1)data=data[0];
-    if(!result.ok||data?.ok===false){const message=result.status>=500?'No pudimos completar la solicitud. Intenta nuevamente.':data?.mensaje||'No pudimos completar la solicitud.';throw new ApiError(message,result.status);}
+    if(!result.ok||data?.ok===false){const message=result.status>=500?'No pudimos completar la solicitud. Intenta nuevamente.':data?.mensaje||'No pudimos completar la solicitud.';throw new ApiError(message,result.status,data);}
     if(!data||typeof data!=='object')throw new ApiError('La respuesta del servicio no es válida.',result.status);
     return data;
   }catch(e){

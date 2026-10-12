@@ -1,6 +1,6 @@
 {
-    "email":  "prueba.wf01.20261007154513@example.com",
-    "nombre":  "Usuario de prueba WF01",
-    "operacion":  "crear",
-    "password":  "PruebaEventPass2026!"
+  "email": "usuario@example.test",
+  "nombre": "Usuario de prueba WF01",
+  "operacion": "crear",
+  "password": "CAMBIAR_PASSWORD_DE_PRUEBA"
 }

@@ -31,6 +31,7 @@ w.fetch=async(url,opts)=>{
   if(body.operacion==='actualizar'){const r=regs.find(x=>x.inscripcion_id===body.inscripcion_id);r.nombre_acreditacion=body.nombre_acreditacion;r.observaciones=body.observaciones;data={ok:true,inscripcion:r};}
   if(body.operacion==='cancelar'){const r=regs.find(x=>x.inscripcion_id===body.inscripcion_id);r.estado='CANCELADA';data={ok:true,inscripcion:r};}
  }
+ if(domain==='checkin'){const r=regs.find(r=>r.inscripcion_id===body.inscripcion_id);if(!r||r.evento_id!==body.evento_id||!['CONFIRMADA','ASISTIO'].includes(r.estado)){status=409;data={ok:false,resultado:'RECHAZADO',mensaje:'La inscripción no permite asistencia'};}else if(r.estado==='ASISTIO'){data={ok:true,resultado:'DUPLICADO',mensaje:'El ingreso ya había sido registrado'};}else{r.estado='ASISTIO';status=201;data={ok:true,resultado:'EXITOSO',mensaje:'Check-in realizado correctamente'};}}
  if(domain==='chat')data={output:'Respuesta informativa <img src=x onerror="alert(1)">'};
  return {ok:status<400,status,json:async()=>data};
 };
@@ -56,7 +57,16 @@ try{
  d.querySelector('[data-action=cancel-registration]').click();await wait(()=>d.querySelector('#confirm-dialog').open);d.querySelector('#confirm-dialog').close('yes');await wait(()=>d.querySelector('.registration-card .status')?.textContent==='Cancelada');ok('Cancelación con confirmación');
  await go('/evento/E2');await wait(()=>d.querySelector('[data-action=enroll]'));assert.ok(d.querySelector('[data-action=enroll]').textContent.includes('lista de espera'));d.querySelector('[data-action=enroll]').click();await wait(()=>d.querySelectorAll('.registration-card').length===2);assert.equal(regs[1].estado,'LISTA_ESPERA');ok('Evento lleno entra a espera');
  d.querySelector('#chat-toggle').click();d.querySelector('#chat-input').value='¿Qué eventos hay?';submit(d.querySelector('#chat-form'));await wait(()=>d.querySelector('#chat-messages').textContent.includes('Respuesta informativa'));assert.equal(d.querySelectorAll('#chat-messages img').length,0);ok('Chat presenta texto sin ejecutar HTML');
+
+ regs.push({inscripcion_id:'IC',evento_id:'E1',estado:'CONFIRMADA',nombre_acreditacion:'Ana'});
+ assert.equal(d.querySelector('#navigation a:last-child').getAttribute('href'),'/examen/#/checkin');
+ await go('/checkin');await wait(()=>d.querySelector('#checkin-selection option[value=IC]'));
+ const select=d.querySelector('#checkin-selection');select.value='IC';select.dispatchEvent(new w.Event('change',{bubbles:true}));
+ const check=d.querySelector('form[data-form=checkin]');assert.equal(check.elements.evento_id.value,'E1');submit(check);await wait(()=>check.querySelector('.success'));ok('Check-in exitoso y selección de inscripción');
+ submit(check);await wait(()=>check.querySelector('.duplicate'));ok('Check-in duplicado diferenciado');
+ fill('evento_id','E2',check);submit(check);await wait(()=>check.querySelector('.rejected'));ok('Check-in rechazado diferenciado');
  d.querySelector('[data-action=logout]').click();await wait(()=>!w.sessionStorage.getItem('ep_token'));ok('Logout limpia token');
  failCatalog=true;await go('/');await wait(()=>d.querySelector('.inline-error'));assert.equal(d.querySelectorAll('.event-card').length,0);failCatalog=false;d.querySelector('[data-action=retry]').click();await wait(()=>d.querySelectorAll('.event-card').length===2);ok('Error de servicio y recuperación sin datos ficticios');
+ await go('/checkin');await wait(()=>d.querySelector('a[href^="#/login?next="]'));const dest=d.querySelector('a[href^="#/login?next="]').getAttribute('href').slice(1);await go(dest);const f=d.querySelector('form[data-form=login]');fill('email','ana@example.test',f);fill('password','Solo-Prueba-2026!',f);submit(f);await wait(()=>d.querySelector('#checkin-selection'));ok('Login regresa al examen');
  console.log(passed+' recorridos DOM superados. API simulada; sin navegador real, diseño visual ni servicios externos.');
 }finally{w.close();}

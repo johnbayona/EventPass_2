@@ -790,7 +790,6 @@
     "saveManualExecutions": false,
     "executionTimeout": 300
   },
-  "pinData": {},
   "tags": [],
   "meta": {
     "templateCredsSetupCompleted": false

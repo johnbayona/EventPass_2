@@ -1,0 +1,6 @@
+const test=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm');
+const w=JSON.parse(fs.readFileSync('n8n/WF05_catalogo_publico.json','utf8'));
+const code=w.nodes.find(n=>n.name==='Reglas de negocio').parameters.jsCode;
+function run(req){const events=['Emprendimiento','Educación','Networking'].map((categoria,i)=>({evento_id:'E'+i,categoria,nombre:categoria,fecha:'2099-01-01',hora:'14:00',estado:'PUBLICADO',capacidad:2}));const $=name=>({first:()=>({json:name==='Configuración'?{request:req,config:{eventTimezoneOffset:'-05:00'}}:{consulta_uuid:'id'}}),all:()=> (name==='Leer Eventos'?events:[{evento_id:'E0',estado:'ASISTIO'},{evento_id:'E0',estado:'CONFIRMADA'}]).map(json=>({json}))});return vm.runInNewContext('(function(){'+code+'})()',{$,Date,Error})[0].json;}
+test('Catálogo expone tres categorías y ASISTIO conserva el cupo',()=>{const p=run({operacion:'listado'});assert.equal(p.response.eventos.length,3);assert.equal(p.response.eventos[0].cupos_disponibles,0);});
+test('Filtro Educación no queda bloqueado por Emprendimiento',()=>{const p=run({operacion:'filtro',categoria:'Educación'});assert.equal(p.response.eventos.length,1);assert.equal(p.response.eventos[0].categoria,'Educación');});

@@ -37,13 +37,14 @@ await page.route('https://n8n.test/**',async route=>{
   if(body.operacion==='actualizar'){const r=registrations.find(x=>x.inscripcion_id===body.inscripcion_id);Object.assign(r,{nombre_acreditacion:body.nombre_acreditacion,observaciones:body.observaciones});data={ok:true,inscripcion:r};}
   if(body.operacion==='cancelar'){const r=registrations.find(x=>x.inscripcion_id===body.inscripcion_id);r.estado='CANCELADA';data={ok:true,inscripcion:r};}
  }
+ if(domain==='checkin'){const r=registrations.find(r=>r.inscripcion_id===body.inscripcion_id);if(!r||r.evento_id!==body.evento_id||!['CONFIRMADA','ASISTIO'].includes(r.estado)){status=409;data={ok:false,resultado:'RECHAZADO',mensaje:'La inscripción no permite asistencia'};}else if(r.estado==='ASISTIO'){data={ok:true,resultado:'DUPLICADO',mensaje:'El ingreso ya había sido registrado'};}else{r.estado='ASISTIO';status=201;data={ok:true,resultado:'EXITOSO',mensaje:'Check-in realizado correctamente'};}}
  if(domain==='chat')data={output:'Puedes explorar los eventos. <img src=x onerror="alert(1)">'};
  await route.fulfill({status,contentType:'application/json',body:JSON.stringify(data),headers:{'Access-Control-Allow-Origin':'*'}});
 });
 async function go(hash){await page.goto('http://localhost:5173/'+hash);}
 const screenshotDir=process.env.SCREENSHOT_DIR||'';if(screenshotDir)fs.mkdirSync(screenshotDir,{recursive:true});
 try{
- await go('#/');await page.locator('#home-events .event-card').first().waitFor();assert.equal(await page.locator('#home-events .event-card').count(),3);
+ await go('#/');await page.locator('#home-events .event-card').first().waitFor();assert.equal(await page.locator('#home-events .event-card').count(),4);
  if(screenshotDir)await page.screenshot({path:screenshotDir+'/inicio-desktop.png',fullPage:true});
  await page.getByRole('link',{name:'Explorar eventos',exact:true}).click();await page.locator('#catalog-grid .event-card').first().waitFor();assert.equal(await page.locator('.event-card').count(),6);
  await page.locator('#category-filter').selectOption('Educación');await page.waitForFunction(()=>document.querySelectorAll('.event-card').length===2);assert.ok(calls.some(c=>c.body.operacion==='filtro'&&c.body.categoria==='Educación'));
@@ -64,11 +65,24 @@ try{
  await page.getByRole('button',{name:'Cancelar inscripción',exact:true}).click();await page.locator('#confirm-accept').click();await page.locator('.registration-card .status').filter({hasText:'Cancelada'}).waitFor();assert.equal(registrations[0].estado,'CANCELADA');
  await page.getByRole('button',{name:'Abrir asistente EventPass'}).click();await page.locator('#chat-input').fill('¿Qué eventos hay?');await page.getByRole('button',{name:'Enviar pregunta'}).click();await page.locator('.bubble.assistant').filter({hasText:'Puedes explorar los eventos.'}).waitFor();assert.equal(await page.locator('#chat-messages img').count(),0);await page.getByRole('button',{name:'Cerrar asistente'}).click();
  await go('#/evento/EVT_1');await page.getByRole('button',{name:'Unirme a la lista de espera',exact:false}).click();await page.locator('.registration-card .status').filter({hasText:'Lista de espera'}).waitFor();assert.equal(registrations[1].estado,'LISTA_ESPERA');
+
+ registrations.push({inscripcion_id:'INS_CHECKIN',usuario_id:user.usuario_id,evento_id:'EVT_0',estado:'CONFIRMADA',nombre_acreditacion:'Ana'});
+ await page.goto('http://localhost:5173/examen/');await page.locator('#checkin-selection option[value="INS_CHECKIN"]').waitFor({state:'attached'});
+ await page.locator('#checkin-selection').selectOption('INS_CHECKIN');
+ assert.equal(await page.locator('input[name=evento_id]').inputValue(),'EVT_0');
+ await page.getByRole('button',{name:'Registrar mi ingreso'}).click();await page.locator('#checkin-result.success').waitFor();
+ await page.getByRole('button',{name:'Registrar mi ingreso'}).click();await page.locator('#checkin-result.duplicate').waitFor();
+ await page.locator('input[name=evento_id]').fill('EVT_1');await page.getByRole('button',{name:'Registrar mi ingreso'}).click();await page.locator('#checkin-result.rejected').waitFor();
+ if(screenshotDir)await page.screenshot({path:screenshotDir+'/examen-desktop.png',fullPage:true});
+ await page.setViewportSize({width:390,height:844});assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),'Overflow examen móvil');
+ if(screenshotDir)await page.screenshot({path:screenshotDir+'/examen-movil.png',fullPage:true});
+ await page.setViewportSize({width:1440,height:1100});
  await page.getByRole('button',{name:'Salir',exact:true}).click();await page.getByRole('link',{name:'Ingresar',exact:true}).waitFor();assert.equal(logged,false);assert.equal(await page.evaluate(()=>sessionStorage.getItem('ep_token')),null);
  failCatalog=true;await go('#/');await page.getByRole('heading',{name:'El catálogo está temporalmente no disponible'}).waitFor();assert.equal(await page.locator('.event-card').count(),0);
  failCatalog=false;await page.getByRole('button',{name:'Volver a intentar'}).click();await page.locator('.event-card').first().waitFor();
  await page.setViewportSize({width:390,height:844});await go('#/');await page.locator('.event-card').first().waitFor();assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),'Overflow móvil');
  if(screenshotDir)await page.screenshot({path:screenshotDir+'/inicio-movil.png',fullPage:true});
  await page.getByRole('button',{name:'Abrir menú'}).click();await page.getByRole('link',{name:'Explorar eventos',exact:true}).click();await page.locator('#catalog-grid .event-card').first().waitFor();assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),'Overflow catálogo móvil');
+ await page.goto('http://localhost:5173/examen/');await page.getByRole('link',{name:'Iniciar sesión',exact:false}).click();await page.locator('input[name=email]').fill('ana@example.test');await page.locator('input[name=password]').fill('Solo-Prueba-2026!');await page.getByRole('button',{name:'Ingresar',exact:false}).click();await page.locator('#checkin-selection').waitFor();
  assert.deepEqual(errors,[]);console.log('E2E OK: catálogo, filtros, registro, login, perfil, Telegram simulado, inscripción, edición, cancelación, espera, chat seguro, logout, error/red y móvil.');
 }finally{await browser.close();}

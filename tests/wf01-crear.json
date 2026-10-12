@@ -1,6 +1,6 @@
 {
   "operacion": "crear",
   "nombre": "Prueba desde VS Code",
-  "email": "prueba.vscode.00@example.com",
-  "password": "PruebaEventPass2026!"
+  "email": "usuario@example.test",
+  "password": "CAMBIAR_PASSWORD_DE_PRUEBA"
 }

@@ -9,7 +9,7 @@ const state={token:storage.get('ep_token')||'',user:null,events:[],categories:[]
 try{state.user=JSON.parse(storage.get('ep_user')||'null');}catch{storage.remove('ep_user');}
 let chatSession=storage.get('ep_chat_session')||crypto.randomUUID();storage.set('ep_chat_session',chatSession);
 let visitorId=storage.get('ep_visitor')||crypto.randomUUID();storage.set('ep_visitor',visitorId);
-const labelCategory=c=>c==='Educación'?'Aprende':c==='Networking'?'Conecta':'Emprende';
+const labelCategory=c=>({Educación:'Aprende',Networking:'Conecta',Tecnología:'Innova',Cultura:'Crea',Deportes:'Actívate',Comunidad:'Comparte'}[c]||'Emprende');
 function toast(message,type='success'){
  const item=document.createElement('div');item.className='toast '+type;item.textContent=message;
  document.querySelector('#toasts').append(item);setTimeout(()=>item.remove(),type==='error'?9000:6500);
@@ -20,13 +20,14 @@ function renderNav(){
  const route=location.hash||'#/';
  navigation.innerHTML=`<a href="#/" ${route==='#/'?'aria-current="page"':''}>Inicio</a><a href="#/eventos" ${route.startsWith('#/eventos')?'aria-current="page"':''}>Explorar eventos</a>${state.user?`<a href="#/inscripciones" ${route==='#/inscripciones'?'aria-current="page"':''}>Mis inscripciones</a><a class="nav-profile" href="#/perfil">${esc(state.user.nombre?.split(' ')[0]||'Mi perfil')} <span class="avatar">${esc(state.user.nombre?.[0]||'U')}</span></a><button class="nav-logout" data-action="logout">Salir</button>`:`<a href="#/login">Ingresar</a><a class="button small primary" href="#/registro">Crear cuenta <span>↗</span></a>`}`;
  document.querySelector('#menu-toggle').setAttribute('aria-expanded','false');navigation.classList.remove('open');
+ navigation.insertAdjacentHTML('beforeend',`<a class="nav-exam" href="/examen/#/checkin" ${route.startsWith('#/checkin')?'aria-current="page"':''}>Examen · Check-in <span aria-hidden="true">↗</span></a>`);
 }
 function page(title,subtitle,content){return `<section class="container page"><div class="page-heading"><span class="eyebrow">EVENTPASS · EMPRENDE365</span><h1>${title}</h1><p>${subtitle}</p></div>${content}</section>`;}
 function loading(title='Estamos preparando todo…'){view.innerHTML=page(title,'Un momento, por favor.',`<div class="skeleton-grid" aria-label="Cargando" aria-busy="true">${'<div class="skeleton-card"></div>'.repeat(3)}</div>`);}
 function errorView(error,retry=true){view.innerHTML=page('No pudimos cargar esta página',esc(error.message),`<div class="empty-state"><span class="empty-icon">↻</span><h2>Podemos intentarlo de nuevo</h2><p>Tu información se conserva. Revisa tu conexión y vuelve a intentar.</p><div class="actions">${retry?'<button class="button primary" data-action="retry">Volver a intentar</button>':''}<a class="button secondary" href="#/">Ir al inicio</a></div></div>`);}
 function empty(title,description,link='#/eventos',button='Explorar eventos'){return `<div class="empty-state"><span class="empty-icon">✦</span><h2>${title}</h2><p>${description}</p><a class="button primary" href="${link}">${button} ↗</a></div>`;}
 function authGuard(){if(!state.token){const next=location.hash.slice(1)||'/perfil';location.hash='/login?next='+encodeURIComponent(next);return false;}return true;}
-function nextRoute(){const query=(location.hash.split('?')[1]||'');const candidate=new URLSearchParams(query).get('next');return candidate&&/^\/(perfil|telegram|inscripciones|evento\/[^?#]+)$/.test(candidate)?candidate:'/perfil';}
+function nextRoute(){const query=location.hash.includes('?')?location.hash.slice(location.hash.indexOf('?')+1):'';const candidate=new URLSearchParams(query).get('next');return candidate&&/^\/(perfil|telegram|inscripciones|checkin(?:\?[^#]*)?|evento\/[^?#]+)$/.test(candidate)?candidate:'/perfil';}
 function formError(form,e){const target=form.querySelector('.form-error');if(target){target.textContent=e.message;target.hidden=false;target.focus();}else toast(e.message,'error');}
 function clearError(form){const e=form.querySelector('.form-error');if(e){e.hidden=true;e.textContent='';}}
 function card(event,index=0){
@@ -39,7 +40,7 @@ async function fetchCatalog(category=''){
 }
 async function home(ticket){
  view.innerHTML=`<section class="hero container"><div class="hero-copy"><span class="hero-kicker"><span class="online-dot"></span> UNA COMUNIDAD DE IDEAS EN MOVIMIENTO</span><h1>Tu próxima idea<br>merece un <span>encuentro.</span></h1><p>Aprende algo nuevo, encuentra aliados y dale impulso a tu emprendimiento. Tu siguiente paso comienza aquí.</p><div class="actions"><a class="button primary" href="#/eventos">Encuentra tu próximo evento <span>↗</span></a><a class="text-link" href="#/registro">Únete a la comunidad →</a></div><div class="hero-proof"><span class="mini-avatar">e</span><span>Para quienes están empezando.<br><strong>Y quienes quieren ir más lejos.</strong></span></div></div><div class="hero-visual" aria-hidden="true"><div class="orbit orbit-one"></div><div class="orbit orbit-two"></div><span class="floating-tag tag-one">Ideas + acción ↗</span><div class="hero-ticket"><span class="ticket-label">TU PRÓXIMO GRAN PASO</span><div class="ticket-star">✳</div><h2>Emprende.<br>Aprende.<br>Conecta.</h2><div class="ticket-line"></div><div class="ticket-footer"><span>EVENTPASS<br><strong>EMPRENDE365</strong></span><span class="barcode"></span></div></div><span class="floating-tag tag-two">Un encuentro puede cambiarlo todo.</span><span class="visual-spark">✦</span></div></section><section class="value-strip"><div class="container"><span>✳ Aprende con propósito</span><span>↗ Construye tu red</span><span>◉ Haz crecer tu negocio</span></div></section><section class="container section"><div class="section-heading"><div><span class="eyebrow">ELIGE TU SIGUIENTE PASO</span><h2>Encuentros que te impulsan</h2></div><a class="text-link" href="#/eventos">Ver todos los eventos ↗</a></div><div id="home-events" class="event-grid">${'<div class="skeleton-card"></div>'.repeat(3)}</div></section><section class="container how-section"><div><span class="eyebrow">ES MÁS FÁCIL DAR EL PRIMER PASO</span><h2>De una idea<br>a una experiencia.</h2><p>Tu cuenta conecta cada encuentro con lo que quieres construir.</p><a class="button secondary" href="#/registro">Comenzar ahora ↗</a></div><ol class="steps"><li><span>01</span><div><h3>Descubre un encuentro</h3><p>Explora eventos de emprendimiento, educación y networking.</p></div></li><li><span>02</span><div><h3>Crea tu cuenta y vincula Telegram</h3><p>Recibe confirmaciones y recordatorios por correo y Telegram.</p></div></li><li><span>03</span><div><h3>Reserva tu lugar</h3><p>Si el evento está lleno, entra a la lista de espera y te avisaremos cuando se libere un cupo.</p></div></li></ol></section>`;
- try{const events=await fetchCatalog();if(ticket!==state.ticket)return;state.events=events;const open=events.filter(e=>canEnroll(e)).slice(0,3);document.querySelector('#home-events').innerHTML=open.length?open.map(card).join(''):empty('Pronto habrá nuevos encuentros','Vuelve al catálogo para conocer todos los eventos.');}
+ try{const events=await fetchCatalog();if(ticket!==state.ticket)return;state.events=events;const open=events.filter(e=>canEnroll(e)).slice(0,6);document.querySelector('#home-events').innerHTML=open.length?open.map(card).join(''):empty('Pronto habrá nuevos encuentros','Vuelve al catálogo para conocer todos los eventos.');}
  catch(e){if(ticket===state.ticket)document.querySelector('#home-events').innerHTML=`<div class="inline-error"><h3>El catálogo está temporalmente no disponible</h3><p>${esc(e.message)}</p><button class="button secondary" data-action="retry">Volver a intentar</button></div>`;}
 }
 function renderCatalog(){
@@ -86,7 +87,7 @@ async function inscriptions(ticket){
  const sorted=[...list].sort((a,b)=>new Date(b.fecha_inscripcion)-new Date(a.fecha_inscripcion));
  view.innerHTML=page('Tu agenda de nuevas posibilidades.','Consulta tus reservas, actualiza tu acreditación y organiza tu próximo paso.',sorted.length?`<div class="registration-list">${sorted.map(r=>{
   const event=events.find(e=>e.evento_id===r.evento_id);const active=['CONFIRMADA','LISTA_ESPERA'].includes(r.estado);const manageable=active&&(!event||(eventDate(event)?.getTime()>Date.now()&&event.estado!=='CANCELADO'));
-  return `<article class="registration-card"><div class="registration-main"><div class="registration-icon">${r.estado==='CONFIRMADA'?'↗':r.estado==='LISTA_ESPERA'?'◷':'×'}</div><div><span class="status ${r.estado==='CONFIRMADA'?'active':r.estado==='LISTA_ESPERA'?'waiting':'closed'}">${esc(stateLabel(r.estado))}</span><h2>${esc(event?.nombre||'Evento '+r.evento_id)}</h2><p>${event?esc(dateLabel(event))+' · '+esc(timeLabel(event))+' · '+esc(event.lugar):'Los detalles del evento no están disponibles en este momento.'}</p><small>Acreditación: ${esc(r.nombre_acreditacion)}</small>${r.estado==='LISTA_ESPERA'?'<p class="wait-note">Tu lugar se asignará por orden de inscripción cuando se libere un cupo. Te avisaremos.</p>':''}</div></div><div class="registration-actions">${['CONFIRMADA','ASISTIO'].includes(r.estado)?`<a class="button secondary small" href="#/checkin?inscripcion_id=${encodeURIComponent(r.inscripcion_id)}&evento_id=${encodeURIComponent(r.evento_id)}">Check-in</a>`:''}${event?`<a class="button secondary small" href="#/evento/${encodeURIComponent(r.evento_id)}">Ver evento ↗</a>`:''}${manageable?`<button class="text-danger" data-action="cancel-registration" data-id="${esc(r.inscripcion_id)}">Cancelar inscripción</button>`:''}</div>${manageable?`<details class="registration-edit"><summary>Editar datos de acreditación</summary><form data-form="editar-inscripcion" data-id="${esc(r.inscripcion_id)}"><p class="form-error" role="alert" tabindex="-1" hidden></p><div class="form-row"><label>Nombre de acreditación<input name="nombre_acreditacion" value="${esc(r.nombre_acreditacion)}" minlength="2" maxlength="100" required></label><label>Observaciones<input name="observaciones" value="${esc(r.observaciones)}" maxlength="500"></label></div><button class="button secondary small" type="submit">Guardar cambios</button></form></details>`:''}</article>`;
+  return `<article class="registration-card"><div class="registration-main"><div class="registration-icon">${r.estado==='CONFIRMADA'?'↗':r.estado==='LISTA_ESPERA'?'◷':'×'}</div><div><span class="status ${r.estado==='CONFIRMADA'?'active':r.estado==='LISTA_ESPERA'?'waiting':'closed'}">${esc(stateLabel(r.estado))}</span><h2>${esc(event?.nombre||'Evento '+r.evento_id)}</h2><p>${event?esc(dateLabel(event))+' · '+esc(timeLabel(event))+' · '+esc(event.lugar):'Los detalles del evento no están disponibles en este momento.'}</p><small>Acreditación: ${esc(r.nombre_acreditacion)}</small>${r.estado==='LISTA_ESPERA'?'<p class="wait-note">Tu lugar se asignará por orden de inscripción cuando se libere un cupo. Te avisaremos.</p>':''}</div></div><div class="registration-actions">${['CONFIRMADA','ASISTIO'].includes(r.estado)?`<a class="button secondary small" href="/examen/#/checkin?inscripcion_id=${encodeURIComponent(r.inscripcion_id)}&evento_id=${encodeURIComponent(r.evento_id)}">Check-in</a>`:''}${event?`<a class="button secondary small" href="#/evento/${encodeURIComponent(r.evento_id)}">Ver evento ↗</a>`:''}${manageable?`<button class="text-danger" data-action="cancel-registration" data-id="${esc(r.inscripcion_id)}">Cancelar inscripción</button>`:''}</div>${manageable?`<details class="registration-edit"><summary>Editar datos de acreditación</summary><form data-form="editar-inscripcion" data-id="${esc(r.inscripcion_id)}"><p class="form-error" role="alert" tabindex="-1" hidden></p><div class="form-row"><label>Nombre de acreditación<input name="nombre_acreditacion" value="${esc(r.nombre_acreditacion)}" minlength="2" maxlength="100" required></label><label>Observaciones<input name="observaciones" value="${esc(r.observaciones)}" maxlength="500"></label></div><button class="button secondary small" type="submit">Guardar cambios</button></form></details>`:''}</article>`;
  }).join('')}</div>`:empty('Tu primera experiencia te espera','Aún no tienes inscripciones. Explora el catálogo y encuentra tu próximo encuentro.'));
 }
 async function route(){
@@ -100,7 +101,7 @@ async function route(){
   else if(path==='/perfil')await profile(ticket);
   else if(path==='/telegram')await telegram(ticket);
   else if(path==='/inscripciones')await inscriptions(ticket);
-  else if(path==='/checkin'){if(authGuard())checkinPage();}
+  else if(path==='/checkin'){await checkinPage(ticket);}
   else view.innerHTML=page('Este camino aún no existe.','Volvamos a un lugar conocido.',empty('Página no encontrada','Explora las oportunidades disponibles.'));
  }catch(e){if(ticket!==state.ticket)return;if(e.status===401&&state.token){clearSession();toast('Tu sesión terminó. Ingresa nuevamente.','error');location.hash='/login';}else errorView(e);}
 }
@@ -111,12 +112,14 @@ function confirmAction(title,message,accept){return new Promise(resolve=>{
 function notificationFeedback(data){if(notificationWarning(data.notificaciones))toast('La operación se guardó, pero uno de los avisos no pudo enviarse. Consulta tu inscripción aquí.','error');}
 document.addEventListener('submit',async event=>{
  const form=event.target;if(!form.matches('form[data-form]'))return;event.preventDefault();clearError(form);
- const previousResult=form.querySelector('#checkin-result');if(previousResult)previousResult.textContent='';
+ const previousResult=form.querySelector('#checkin-result');if(previousResult){previousResult.textContent='Validando tu ingreso…';previousResult.className='checkin-result pending';}
  const type=form.dataset.form;const fields=Object.fromEntries(new FormData(form));const buttons=[...form.querySelectorAll('button')];buttons.forEach(b=>b.disabled=true);form.setAttribute('aria-busy','true');
  try{
   if(type==='checkin'){
    const data=await request('checkin',{inscripcion_id:fields.inscripcion_id.trim(),evento_id:fields.evento_id.trim()},state.token);
-   form.querySelector('#checkin-result').textContent=data.mensaje+(data.aviso_pendiente?' La asistencia se guardó; revisa el envío de notificaciones.':'')+(data.advertencia?' '+data.advertencia:'');
+   const result=form.querySelector('#checkin-result');
+   result.className='checkin-result '+(data.resultado==='DUPLICADO'?'duplicate':'success');
+   result.textContent=(data.resultado==='DUPLICADO'?'INGRESO YA REGISTRADO. ':'ASISTENCIA REGISTRADA. ')+(data.mensaje||'')+(data.aviso_pendiente?' La asistencia se guardó; hay notificaciones pendientes.':'')+(data.advertencia?' '+data.advertencia:'');
   }else if(type==='registro'){
    if(fields.password!==fields.confirm_password)throw new Error('Las contraseñas no coinciden.');
    await request('usuarios',{operacion:'crear',nombre:fields.nombre,email:fields.email,password:fields.password});
@@ -129,7 +132,7 @@ document.addEventListener('submit',async event=>{
   }else if(type==='editar-inscripcion'){
    const data=await request('inscripciones',{operacion:'actualizar',inscripcion_id:form.dataset.id,nombre_acreditacion:fields.nombre_acreditacion,observaciones:fields.observaciones},state.token);toast('Tus datos de acreditación están actualizados.');notificationFeedback(data);
   }
- }catch(e){if(e.status===401&&state.token){clearSession();location.hash='/login';toast('Tu sesión terminó. Ingresa nuevamente.','error');}else formError(form,e);}
+ }catch(e){if(type==='checkin'){const result=form.querySelector('#checkin-result');result.className='checkin-result rejected';result.textContent=(e.data?.resultado==='RECHAZADO'?'INGRESO RECHAZADO. ':'NO SE PUDO CONFIRMAR EL RESULTADO. ')+e.message;} if(e.status===401&&state.token){clearSession();location.hash=type==='checkin'?'/login?next='+encodeURIComponent('/checkin'):'/login';toast('Tu sesión terminó. Ingresa nuevamente.','error');}else if(type!=='checkin')formError(form,e);}
  finally{buttons.forEach(b=>b.disabled=false);form.removeAttribute('aria-busy');}
 });
 document.addEventListener('click',async event=>{
@@ -167,6 +170,7 @@ document.addEventListener('click',async event=>{
 });
 document.addEventListener('input',event=>{if(event.target.id==='event-search'){state.query=event.target.value;renderCatalog();}});
 document.addEventListener('change',async event=>{
+ if(event.target.id==='checkin-selection'){const option=event.target.selectedOptions[0];const form=document.querySelector('form[data-form=checkin]');form.elements.inscripcion_id.value=option.value;form.elements.evento_id.value=option.dataset.evento||'';}
  if(event.target.id==='available-filter'){state.availableOnly=event.target.checked;renderCatalog();}
  if(event.target.id==='category-filter'){
   const select=event.target;const previous=state.category;state.category=select.value;select.disabled=true;
@@ -196,7 +200,15 @@ async function start(){
 }
 start();
 
-function checkinPage(){
- const q=new URLSearchParams(location.hash.split('?')[1]||'');
- view.innerHTML=page('Check-in digital','Registra tu asistencia con los datos de tu inscripción.',`<section class="form-panel"><form data-form="checkin"><p class="form-error" role="alert" tabindex="-1" hidden></p><label>ID de inscripción<input name="inscripcion_id" value="${esc(q.get('inscripcion_id')||'')}" required maxlength="120"></label><label>ID del evento<input name="evento_id" value="${esc(q.get('evento_id')||'')}" required maxlength="120"></label><button class="button primary" type="submit">Registrar ingreso</button><p id="checkin-result" role="status" aria-live="polite"></p></form><a href="#/inscripciones">Volver a mis inscripciones</a></section>`);
+async function checkinPage(ticket){
+ const q=new URLSearchParams(location.hash.includes('?')?location.hash.slice(location.hash.indexOf('?')+1):'');
+ view.innerHTML=page('Tu entrada, confirmada.','Examen · Check-in digital',`<div class="exam-layout"><section class="form-panel exam-form"><span class="eyebrow">REGISTRO DE ASISTENCIA</span><h2>Bienvenido al encuentro</h2><p>Selecciona tu inscripción o introduce los dos identificadores de tu reserva.</p>${state.token?`<label>Mis inscripciones<select id="checkin-selection"><option value="">Cargando inscripciones…</option></select></label><p id="checkin-selection-note" class="field-help"></p><form data-form="checkin"><p class="form-error" role="alert" tabindex="-1" hidden></p><label>ID de inscripción<input name="inscripcion_id" value="${esc(q.get('inscripcion_id')||'')}" required maxlength="120" placeholder="INS_…"></label><label>ID del evento<input name="evento_id" value="${esc(q.get('evento_id')||'')}" required maxlength="120" placeholder="EVT_…"></label><button class="button primary full" type="submit">Registrar mi ingreso ↗</button><div id="checkin-result" role="status" aria-live="polite"></div></form>`:`<div class="checkin-result pending"><h3>Primero, ingresa a tu cuenta</h3><p>Así podemos comprobar que la inscripción te pertenece.</p><a class="button primary" href="#/login?next=${encodeURIComponent('/checkin'+(q.toString()?'?'+q.toString():''))}">Iniciar sesión ↗</a></div>`}<a class="text-link" href="#/inscripciones">Ver mis inscripciones →</a></section><aside class="exam-aside"><div class="exam-stamp" aria-hidden="true">✓</div><span class="eyebrow">UN INGRESO. UNA EXPERIENCIA.</span><h2>Todo listo para participar.</h2><ol class="steps"><li><span>01</span><div><h3>Identifica tu reserva</h3><p>Tu inscripción debe estar confirmada y corresponder al evento.</p></div></li><li><span>02</span><div><h3>Registra tu llegada</h3><p>Se guarda la fecha y hora, y tu inscripción pasa a Asistió.</p></div></li><li><span>03</span><div><h3>Recibe tu confirmación</h3><p>Recibirás un aviso por correo y Telegram. Un segundo intento no registra otra asistencia.</p></div></li></ol><div class="exam-legend"><span>✓ Registrado</span><span>↻ Ya registrado</span><span>× Rechazado</span></div></aside></div>`);
+ if(!state.token)return;
+ try{
+  const data=await request('inscripciones',{operacion:'consultar'},state.token);
+  if(ticket!==state.ticket)return;
+  const rows=(data.inscripciones||[]).filter(r=>['CONFIRMADA','ASISTIO'].includes(r.estado));
+  document.querySelector('#checkin-selection').innerHTML='<option value="">Selecciona una inscripción</option>'+rows.map(r=>`<option value="${esc(r.inscripcion_id)}" data-evento="${esc(r.evento_id)}">${esc(r.nombre_acreditacion||r.inscripcion_id)} · ${esc(r.evento_id)} · ${esc(stateLabel(r.estado))}</option>`).join('');
+  document.querySelector('#checkin-selection-note').textContent=rows.length?'También puedes copiar los identificadores desde Mis inscripciones.':'Todavía no tienes inscripciones confirmadas. Reserva un evento para continuar.';
+ }catch(e){if(ticket!==state.ticket)return;document.querySelector('#checkin-selection').innerHTML='<option value="">Introduce los identificadores abajo</option>';document.querySelector('#checkin-selection-note').textContent=e.message;}
 }

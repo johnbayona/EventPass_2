@@ -9,7 +9,13 @@
     "build": "node scripts/build.mjs",
     "preview": "node scripts/server.mjs --dist",
     "test": "node --test tests/frontend.test.mjs",
-    "test:workflows": "node tests/validar.cjs"
+    "test:workflows": "node tests/validar.cjs",
+    "test:examen": "node --test tests/wf11.test.cjs",
+    "audit:workflows": "node scripts/auditar-workflows.mjs",
+    "preparar:eventos": "node scripts/preparar-eventos.mjs",
+    "test:catalogo": "node --test tests/catalogo-revision.test.cjs"
   },
-  "engines": { "node": ">=22" }
+  "engines": {
+    "node": ">=22"
+  }
 }

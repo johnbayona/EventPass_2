@@ -1,3 +1,5 @@
+> Revisión 12 de octubre de 2026: empieza por [Integración y pruebas](docs/INTEGRACION_Y_PRUEBAS.md) y [Diagnóstico actualizado](docs/DIAGNOSTICO_ACTUAL.md). Los workflows son candidatos pendientes de verificar en tu entorno.
+
 # EventPass Emprende365
 
 Aplicación para descubrir eventos de emprendimiento, educación y networking, crear una cuenta, vincular Telegram y gestionar inscripciones. El frontend se comunica exclusivamente con n8n; Google Sheets conserva los datos académicos y n8n coordina Gmail, Telegram y el asistente IA.
@@ -227,3 +229,42 @@ Sigue `docs/PASO_A_PASO.md` para agregar el código a tu mismo GitHub, publicar 
 Después de las pruebas, exporta directamente desde n8n los diez workflows configurados y reemplaza los JSON de referencia conservando sus nombres. Agrega aquí nombre del estudiante, enlace del repositorio y URL funcional de Vercel. Revisa que no exista pinData ni secretos en el repositorio. Conserva evidencia de las pruebas de servicios y de los seis eventos/tres categorías.
 
 Para restaurar tu WF01 anterior, conserva su exportación separada y despublica el nuevo antes de volver a usar la misma ruta. El paquete no borra registros existentes.
+
+
+## Examen — Check-in digital
+
+Permite a un usuario autenticado registrar su propia asistencia desde Mis inscripciones → Check-in. El frontend llama a n8n; no lee ni escribe Sheets directamente.
+
+- Endpoint: POST /webhook/eventpass/checkin.
+- Pruebas: POST /webhook-test/eventpass/checkin con escucha activa.
+- Cabeceras: Content-Type: application/json y Authorization: Bearer <sesión>.
+- Variable opcional: VITE_CHECKIN_URL; vacía usa la ruta estándar a partir de VITE_N8N_BASE_URL.
+
+Petición:
+```json
+{"inscripcion_id":"INS_REAL","evento_id":"EVT_REAL"}
+```
+Respuesta exitosa (HTTP 201):
+```json
+{"ok":true,"resultado":"EXITOSO","mensaje":"Check-in realizado correctamente","checkin_id":"CHK_uuid","inscripcion_id":"INS_REAL","evento_id":"EVT_REAL","fecha_checkin":"2026-10-09T01:00:00.000Z","estado":"ASISTIO","notificaciones":[{"gmail_estado":"ENVIADO","telegram_estado":"ENVIADO"}],"aviso_pendiente":false}
+```
+Duplicado (HTTP 200): ok=true, resultado=DUPLICADO, mensaje de ingreso ya registrado. Rechazado: ok=false, resultado=RECHAZADO, mensaje; HTTP 400 por entrada inválida, 401 por sesión inválida, 403 por inscripción ajena, 404 por registro inexistente o 409 por estado/correspondencia inválidos. Un fallo de configuración WF09 responde 503 antes de mutar asistencia.
+
+Validaciones: IDs presentes; sesión vigente; usuario ACTIVO y propietario; inscripción única/existente; evento único/existente; correspondencia; historial sin EXITOSO previo; estado CONFIRMADA. No admite BORRADOR/CANCELADO. No se impone ventana horaria adicional, no exigida por el examen.
+
+Persistencia nueva: archivo independiente EP11_Checkin, pestaña Checkins. Columnas: checkin_id, inscripcion_id, evento_id, usuario_id, fecha_checkin, resultado, detalle. Resultado admite EXITOSO, RECHAZADO y DUPLICADO. Se conserva un intento por fila. EP06 se actualiza por inscripcion_id con CONFIRMADA → ASISTIO y fecha_actualizacion; otras columnas permanecen intactas.
+
+Idempotencia secuencial: se consulta historial por inscripcion_id antes de escribir; ASISTIO también bloquea otro éxito. Duplicados no actualizan la inscripción ni llaman WF09. Sheets no brinda transacción ni exclusión atómica entre ejecuciones: concurrencia y recuperación parcial son límites documentados en LEEME_PRIMERO.md, pendientes de endurecimiento antes de uso multiusuario concurrente.
+
+WF11 llama Execute Sub-workflow hacia WF09, que conserva la lógica Gmail/Telegram, resultados por canal e idempotencia CHECKIN|inscripcion_id. Un error de aviso no revierte asistencia. No se considera verificada la entrega mientras no lleguen ambos mensajes.
+
+Compatibilidad: ocupación CONFIRMADA+ASISTIO en WF05–07; WF06 no permite segunda inscripción tras ASISTIO y mantiene cancelación/edición restringidas a estados activos anteriores. WF08 conserva recordatorios a CONFIRMADA; frontend etiqueta Asistió; WF10 continúa informativo.
+
+Pruebas: node --test tests/wf11.test.cjs; npm test; npm run build. Además se requieren los cuatro casos reales de docs/GUIA_EXAMEN.md. Completar con URL Vercel y enlace al commit final y exportar WF11 desde n8n antes de entregar.
+
+
+## Página independiente del examen
+Ruta /examen/, al final del menú. Comparte la sesión del mismo origen. Selección de inscripción propia o entrada manual de IDs. Distingue EXITOSO, DUPLICADO, RECHAZADO y error sin resultado confirmado. VITE_CHECKIN_URL personaliza el endpoint.
+
+## Catálogo ampliado
+Identidad de emprendimiento con Educación y Networking. npm run preparar:eventos genera siete propuestas futuras para crear por WF04. No se inventan eventos ni cupos en el navegador.

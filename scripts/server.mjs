@@ -11,7 +11,7 @@ http.createServer((req,res)=>{
   try{
     const pathname=decodeURIComponent(new URL(req.url,'http://localhost').pathname);
     if(!preview && pathname==='/config.js'){res.writeHead(200,{'Content-Type':mime['.js'],'Cache-Control':'no-store'});res.end(configModule());return;}
-    const file=path.resolve(directory,'.'+(pathname==='/'?'/index.html':pathname));
+    const file=path.resolve(directory,'.'+(pathname==='/'?'/index.html':pathname==='/examen/'||pathname==='/examen'?'/examen/index.html':pathname));
     if(!file.startsWith(directory+path.sep)||!fs.existsSync(file)||!fs.statSync(file).isFile()){res.writeHead(404);res.end('No encontrado');return;}
     res.writeHead(200,{'Content-Type':mime[path.extname(file)]||'application/octet-stream','Cache-Control':'no-store','X-Content-Type-Options':'nosniff'});fs.createReadStream(file).pipe(res);
   }catch{res.writeHead(400);res.end('Solicitud inválida');}
