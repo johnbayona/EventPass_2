@@ -12,33 +12,30 @@
           ]
         }
       },
-      "id": "8b1dce9f-6643-4816-9fad-1242578c983f",
+      "id": "2537d01c-eec1-4fd9-b38f-3c717d4e7d22",
       "name": "Schedule Trigger",
       "type": "n8n-nodes-base.scheduleTrigger",
       "typeVersion": 1.2,
       "position": [
         0,
-        0
+        336
       ]
     },
     {
       "parameters": {
-        "mode": "runOnceForAllItems",
-        "jsCode": "// EDITA SOLO config. Los IDs de Sheets son públicos identificadores, no credenciales.\nconst config = {\n  \"sheets\": {\n    \"EP01_Usuarios\": \"REEMPLAZAR_ID_EP01_Usuarios\",\n    \"EP02_Sesiones\": \"REEMPLAZAR_ID_EP02_Sesiones\",\n    \"EP03_Telegram\": \"REEMPLAZAR_ID_EP03_Telegram\",\n    \"EP04_Eventos\": \"REEMPLAZAR_ID_EP04_Eventos\",\n    \"EP05_Catalogo_Log\": \"REEMPLAZAR_ID_EP05_Catalogo_Log\",\n    \"EP06_Inscripciones\": \"REEMPLAZAR_ID_EP06_Inscripciones\",\n    \"EP07_Reasignaciones\": \"REEMPLAZAR_ID_EP07_Reasignaciones\",\n    \"EP08_Recordatorios\": \"REEMPLAZAR_ID_EP08_Recordatorios\",\n    \"EP09_Notificaciones\": \"REEMPLAZAR_ID_EP09_Notificaciones\",\n    \"EP10_Soporte\": \"REEMPLAZAR_ID_EP10_Soporte\"\n  },\n  \"sessionHours\": 8,\n  \"linkMinutes\": 10,\n  \"reminderHours\": 24,\n  \"eventTimezoneOffset\": \"-05:00\",\n  \"workflowNotificaciones\": \"SELECCIONAR_WF09_EN_EL_NODO\",\n  \"frontendOrigin\": \"http://localhost:5173\"\n};\nconst raw = $input.first().json;\nconst telegram = !!raw.message;\nconst request = telegram ? {text:raw.message.text || ''} : (raw.body || raw);\nreturn [{json:{config,request,headers:raw.headers||{},mode:telegram?'telegram':'http',chat_id:telegram?String(raw.message.chat.id):'',chat_type:raw.message?.chat?.type||'',telegram_username:raw.message?.from?.username||''}}];\n"
+        "jsCode": "// EDITA SOLO config. Los IDs de Sheets son públicos identificadores, no credenciales.\nconst config = {\n  \"sheets\": {\n    \"EP01_Usuarios\": \"10GNs5mk6rcwvB2uFBeSgQC3_c1xpEuDmPwOm79lzZm4\",\n    \"EP02_Sesiones\": \"1_1_0buDCtklJDvIGBSo53S1yRFazZyShY3a_2WZae3A\",\n    \"EP03_Telegram\": \"1lh37TRoZXLp6aGvqu2oAlrzbqLiM3li_O5tfioWFt6Y\",\n    \"EP04_Eventos\": \"1EOUz26SJx3YJDMqf1kar4us3HbkdjbOy9OrHtV3RO6Y\",\n    \"EP05_Catalogo_Log\": \"1fMyl2ii43NK02RCE2yJyYslYzIVaIIa1Sp5Ec7-FMJE\",\n    \"EP06_Inscripciones\": \"1cFQwBhsM7j9gq5G4e_S3Fs8acBRXibuxNsCCGmd_u7o\",\n    \"EP07_Reasignaciones\": \"1cY_2gjiithr4nvWdjQcYaTDwF_-q2Topm0HhTIHvP1g\",\n    \"EP08_Recordatorios\": \"1hC4YF3H2uOheexZrTbYz0D4966H6X2HoZbGKiIE1Wvw\",\n    \"EP09_Notificaciones\": \"1OIWc-saMHFfSuHP-Ge7u40BVAP_XwoqMMHFABAarSdg\",\n    \"EP10_Soporte\": \"1NgEHnYSKAw8JLpzi-11Rmu6pDnW_Oh50QMFPV4BchCs\"\n\n  },\n  \"sessionHours\": 8,\n  \"linkMinutes\": 10,\n  \"reminderHours\": 24,\n  \"eventTimezoneOffset\": \"-05:00\",\n  \"workflowNotificaciones\": \"ru4tq3hBGPpnL36S\",\n  \"frontendOrigin\": \"http://localhost:5173\"\n};\nconst raw = $input.first().json;\nconst telegram = !!raw.message;\nconst request = telegram ? {text:raw.message.text || ''} : (raw.body || raw);\nreturn [{json:{config,request,headers:raw.headers||{},mode:telegram?'telegram':'http',chat_id:telegram?String(raw.message.chat.id):'',chat_type:raw.message?.chat?.type||'',telegram_username:raw.message?.from?.username||''}}];\n"
       },
-      "id": "28f1354a-c2ea-4682-a88c-e8808e1b5826",
+      "id": "572228e3-021e-4402-a03c-fca2e989a26a",
       "name": "Configuración",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        300,
-        0
+        304,
+        336
       ]
     },
     {
       "parameters": {
-        "resource": "sheet",
-        "operation": "read",
         "documentId": {
           "__rl": true,
           "value": "={{ $('Configuración').first().json.config.sheets.EP01_Usuarios }}",
@@ -53,21 +50,25 @@
           "returnFirstMatch": false
         }
       },
-      "id": "5b748d8a-9691-46e3-8605-079a44378bb6",
+      "id": "1a167775-7042-4a8e-9891-d0db5f8fb63c",
       "name": "Leer Usuarios",
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.7,
       "position": [
-        600,
-        0
+        608,
+        336
       ],
       "alwaysOutputData": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "55L4jOkLMnG2B3fi",
+          "name": "Google Sheets account"
+        }
+      },
       "notes": "Selecciona tu credencial Google Sheets OAuth2. Lectura completa para persistencia académica. Always Output Data permite hojas sin filas."
     },
     {
       "parameters": {
-        "resource": "sheet",
-        "operation": "read",
         "documentId": {
           "__rl": true,
           "value": "={{ $('Configuración').first().json.config.sheets.EP04_Eventos }}",
@@ -82,21 +83,25 @@
           "returnFirstMatch": false
         }
       },
-      "id": "c2afe8a3-e695-4c78-ae30-9f28fbaca44e",
+      "id": "63ce7fa8-f951-4fa1-9e41-fcc4d182151e",
       "name": "Leer Eventos",
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.7,
       "position": [
-        900,
-        0
+        912,
+        336
       ],
       "alwaysOutputData": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "55L4jOkLMnG2B3fi",
+          "name": "Google Sheets account"
+        }
+      },
       "notes": "Selecciona tu credencial Google Sheets OAuth2. Lectura completa para persistencia académica. Always Output Data permite hojas sin filas."
     },
     {
       "parameters": {
-        "resource": "sheet",
-        "operation": "read",
         "documentId": {
           "__rl": true,
           "value": "={{ $('Configuración').first().json.config.sheets.EP06_Inscripciones }}",
@@ -111,21 +116,25 @@
           "returnFirstMatch": false
         }
       },
-      "id": "964457eb-972f-4f63-8027-4e849f848ea0",
+      "id": "c1c6d30a-2e2c-4562-9204-a84d7de48bc4",
       "name": "Leer Inscripciones",
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.7,
       "position": [
         1200,
-        0
+        336
       ],
       "alwaysOutputData": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "55L4jOkLMnG2B3fi",
+          "name": "Google Sheets account"
+        }
+      },
       "notes": "Selecciona tu credencial Google Sheets OAuth2. Lectura completa para persistencia académica. Always Output Data permite hojas sin filas."
     },
     {
       "parameters": {
-        "resource": "sheet",
-        "operation": "read",
         "documentId": {
           "__rl": true,
           "value": "={{ $('Configuración').first().json.config.sheets.EP08_Recordatorios }}",
@@ -140,43 +149,47 @@
           "returnFirstMatch": false
         }
       },
-      "id": "567e232a-4dbe-43b5-b808-f4e2dd629e1f",
+      "id": "0a8735cf-7077-40b8-8022-9641d1c0e824",
       "name": "Leer Recordatorios",
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.7,
       "position": [
-        1500,
-        0
+        1504,
+        336
       ],
       "alwaysOutputData": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "55L4jOkLMnG2B3fi",
+          "name": "Google Sheets account"
+        }
+      },
       "notes": "Selecciona tu credencial Google Sheets OAuth2. Lectura completa para persistencia académica. Always Output Data permite hojas sin filas."
     },
     {
       "parameters": {
-        "mode": "runOnceForAllItems",
-        "jsCode": "const SCHEMAS={\"Usuarios\": [\"usuario_id\", \"nombre\", \"email_normalizado\", \"password_hash\", \"password_salt\", \"estado\", \"fecha_registro\", \"fecha_actualizacion\"], \"Auditoria_Usuarios\": [\"auditoria_id\", \"usuario_id\", \"accion\", \"fecha\", \"resultado\", \"detalle\"], \"Sesiones\": [\"session_id\", \"usuario_id\", \"session_token\", \"creada_en\", \"expira_en\", \"estado\", \"cerrada_en\", \"ultima_validacion\"], \"Codigos_Vinculacion\": [\"codigo_id\", \"usuario_id\", \"codigo\", \"creado_en\", \"expira_en\", \"estado\", \"usado_en\"], \"Vinculaciones\": [\"vinculacion_id\", \"usuario_id\", \"chat_id\", \"telegram_username\", \"fecha_vinculacion\", \"estado\"], \"Eventos\": [\"evento_id\", \"nombre\", \"categoria\", \"descripcion\", \"fecha\", \"hora\", \"lugar\", \"capacidad\", \"imagen_url\", \"organizador\", \"estado\", \"fecha_creacion\", \"fecha_actualizacion\"], \"Auditoria_Eventos\": [\"auditoria_id\", \"evento_id\", \"accion\", \"fecha\", \"resultado\", \"detalle\"], \"Consultas_Catalogo\": [\"consulta_id\", \"fecha\", \"tipo\", \"evento_id\", \"categoria\", \"resultado_count\", \"visitor_id\", \"status_http\"], \"Inscripciones\": [\"inscripcion_id\", \"usuario_id\", \"evento_id\", \"estado\", \"fecha_inscripcion\", \"fecha_actualizacion\", \"nombre_acreditacion\", \"observaciones\", \"origen\", \"orden_espera\"], \"Auditoria_Inscripciones\": [\"auditoria_id\", \"inscripcion_id\", \"usuario_id\", \"evento_id\", \"accion\", \"estado_anterior\", \"estado_nuevo\", \"fecha\", \"resultado\", \"detalle\"], \"Reasignaciones\": [\"reasignacion_id\", \"evento_id\", \"inscripcion_id\", \"usuario_id\", \"fecha\", \"orden_lista\", \"estado_anterior\", \"estado_nuevo\", \"resultado_notificacion\"], \"Recordatorios\": [\"recordatorio_id\", \"usuario_id\", \"evento_id\", \"inscripcion_id\", \"tipo_recordatorio\", \"fecha_programada\", \"fecha_envio\", \"estado\", \"clave_idempotencia\"], \"Notificaciones\": [\"notificacion_id\", \"usuario_id\", \"tipo\", \"titulo\", \"mensaje\", \"evento_id\", \"inscripcion_id\", \"fecha\", \"gmail_estado\", \"telegram_estado\", \"gmail_error\", \"telegram_error\", \"clave_idempotencia\"], \"Conversaciones\": [\"conversation_id\", \"usuario_id\", \"visitor_id\", \"fecha_inicio\", \"fecha_ultima_interaccion\", \"estado\"], \"Mensajes\": [\"message_id\", \"conversation_id\", \"usuario_id\", \"visitor_id\", \"rol\", \"mensaje\", \"timestamp\"]};\nconst crypto = require('crypto');\nconst ctx = $('Configuración').first().json;\nconst req = ctx.request || {};\nconst cfg = ctx.config;\nconst now = new Date();\nconst iso = now.toISOString();\nconst writes = {};\nconst notifications = [];\nlet status = 200;\nlet response = {};\nfunction rows(sheet) {\n  return $('Leer ' + sheet).all().map(x => x.json).filter(x => x && Object.keys(x).some(k => k !== 'row_number'));\n}\nfunction id(prefix) { return prefix + '_' + crypto.randomUUID(); }\nfunction put(sheet, row) {\n  const cols = SCHEMAS[sheet];\n  const clean = {};\n  for (const k of cols) clean[k] = row[k] === undefined || row[k] === null ? '' : row[k];\n  (writes[sheet] ||= []).push(clean);\n  return clean;\n}\nfunction fail(code, message) { const e = new Error(message); e.http = code; throw e; }\nfunction text(value, name, min=1, max=200) {\n  if (typeof value !== 'string') fail(400, name + ' debe ser texto');\n  const s = value.trim();\n  if (s.length < min || s.length > max) fail(400, name + ' tiene una longitud inválida');\n  return s;\n}\nfunction email(value) {\n  const s = text(value, 'email', 3, 254).toLowerCase();\n  if (!/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(s)) fail(400, 'Email inválido');\n  return s;\n}\nfunction number(value, name, min=0, max=100000) {\n  if (value === '' || value === null || value === undefined || typeof value === 'boolean') fail(400, name + ' es obligatorio');\n  const n = Number(value);\n  if (!Number.isInteger(n) || n < min || n > max) fail(400, name + ' inválido');\n  return n;\n}\nfunction publicUser(u) {\n  const { usuario_id, nombre, email_normalizado, estado, fecha_registro, fecha_actualizacion } = u;\n  return { usuario_id, nombre, email_normalizado, estado, fecha_registro, fecha_actualizacion };\n}\nfunction token() {\n  return String(ctx.headers?.authorization || '').replace(/^Bearer\\s+/i, '').trim() || String(req.session_token || '').trim();\n}\nfunction auth() {\n  const t = token();\n  if (!t) fail(401, 'Sesión requerida');\n  const s = rows('Sesiones').find(x => x.session_token === t);\n  if (!s || s.estado !== 'ACTIVA' || !Number.isFinite(Date.parse(s.expira_en)) || Date.parse(s.expira_en) <= now.getTime()) fail(401, 'Sesión inválida o expirada');\n  const u = rows('Usuarios').find(x => x.usuario_id === s.usuario_id && x.estado === 'ACTIVO');\n  if (!u) fail(401, 'Usuario inactivo o inexistente');\n  if (req.usuario_id && req.usuario_id !== u.usuario_id) fail(403, 'No puedes acceder al perfil de otra persona');\n  return { user:u, session:s };\n}\nfunction linked(uid) { return rows('Vinculaciones').find(x => x.usuario_id === uid && x.estado === 'ACTIVA'); }\nfunction eventTime(e) {\n  const s = String(e.fecha) + 'T' + String(e.hora).slice(0,5) + ':00' + cfg.eventTimezoneOffset;\n  const t = Date.parse(s);\n  if (!Number.isFinite(t)) fail(400, 'Fecha u hora del evento inválida');\n  return t;\n}\nfunction activeRegistration(r) { return ['CONFIRMADA','LISTA_ESPERA'].includes(r.estado); }\nfunction available(e, registrations) {\n  return Math.max(0, Number(e.capacidad) - registrations.filter(r => r.evento_id === e.evento_id && r.estado === 'CONFIRMADA').length);\n}\nfunction notify(uid, type, title, message, eid='', iid='', key='') {\n  notifications.push({usuario_id:uid,tipo:type,titulo:title,mensaje:message,evento_id:eid,inscripcion_id:iid,clave_idempotencia:key || [uid,type,eid,iid,iso].join('|')});\n}\nfunction auditUser(uid, action, detail) {\n  put('Auditoria_Usuarios',{auditoria_id:id('AUD'),usuario_id:uid,accion:action,fecha:iso,resultado:'EXITOSO',detalle:detail});\n}\nfunction auditRegistration(r, action, previous) {\n  put('Auditoria_Inscripciones',{auditoria_id:id('AUD'),inscripcion_id:r.inscripcion_id,usuario_id:r.usuario_id,evento_id:r.evento_id,accion:action,estado_anterior:previous,estado_nuevo:r.estado,fecha:iso,resultado:'EXITOSO',detalle:'Operación validada en n8n'});\n}\nfunction result() { return [{json:{writes,notifications,status,response,mode:ctx.mode,chat_id:ctx.chat_id || ''}}]; }\n\ntry {\n  let queued=0;\n  const all=rows('Recordatorios');\n  for(const e of rows('Eventos').filter(e=>e.estado==='PUBLICADO')) {\n    const delta=eventTime(e)-now.getTime();\n    if(delta<=0 || delta>cfg.reminderHours*3600000) continue;\n    for(const r of rows('Inscripciones').filter(r=>r.evento_id===e.evento_id && r.estado==='CONFIRMADA')) {\n      if(!rows('Usuarios').some(u=>u.usuario_id===r.usuario_id && u.estado==='ACTIVO')) continue;\n      const key=[r.usuario_id,e.evento_id,'ANTES_24H'].join('|');\n      const old=all.find(x=>x.clave_idempotencia===key);\n      if(old && old.estado!=='ERROR') continue;\n      put('Recordatorios',{recordatorio_id:old?.recordatorio_id||id('REC'),usuario_id:r.usuario_id,evento_id:e.evento_id,inscripcion_id:r.inscripcion_id,tipo_recordatorio:'ANTES_24H',fecha_programada:new Date(eventTime(e)-cfg.reminderHours*3600000).toISOString(),fecha_envio:'',estado:'PENDIENTE',clave_idempotencia:key});\n      notify(r.usuario_id,'RECORDATORIO','Recordatorio: '+e.nombre,'Tu evento será el '+e.fecha+' a las '+e.hora+' en '+e.lugar+'.',e.evento_id,r.inscripcion_id,key);\n      queued++;\n    }\n  }\n  response={ok:true,recordatorios_programados:queued};\n} catch(e) {status=e.http||500;response={ok:false,mensaje:e.http?e.message:'Error interno; revisa la ejecución en n8n'};}\nreturn result();\n"
+        "jsCode": "const SCHEMAS={\"Usuarios\": [\"usuario_id\", \"nombre\", \"email_normalizado\", \"password_hash\", \"password_salt\", \"estado\", \"fecha_registro\", \"fecha_actualizacion\"], \"Auditoria_Usuarios\": [\"auditoria_id\", \"usuario_id\", \"accion\", \"fecha\", \"resultado\", \"detalle\"], \"Sesiones\": [\"session_id\", \"usuario_id\", \"session_token\", \"creada_en\", \"expira_en\", \"estado\", \"cerrada_en\", \"ultima_validacion\"], \"Codigos_Vinculacion\": [\"codigo_id\", \"usuario_id\", \"codigo\", \"creado_en\", \"expira_en\", \"estado\", \"usado_en\"], \"Vinculaciones\": [\"vinculacion_id\", \"usuario_id\", \"chat_id\", \"telegram_username\", \"fecha_vinculacion\", \"estado\"], \"Eventos\": [\"evento_id\", \"nombre\", \"categoria\", \"descripcion\", \"fecha\", \"hora\", \"lugar\", \"capacidad\", \"imagen_url\", \"organizador\", \"estado\", \"fecha_creacion\", \"fecha_actualizacion\"], \"Auditoria_Eventos\": [\"auditoria_id\", \"evento_id\", \"accion\", \"fecha\", \"resultado\", \"detalle\"], \"Consultas_Catalogo\": [\"consulta_id\", \"fecha\", \"tipo\", \"evento_id\", \"categoria\", \"resultado_count\", \"visitor_id\", \"status_http\"], \"Inscripciones\": [\"inscripcion_id\", \"usuario_id\", \"evento_id\", \"estado\", \"fecha_inscripcion\", \"fecha_actualizacion\", \"nombre_acreditacion\", \"observaciones\", \"origen\", \"orden_espera\"], \"Auditoria_Inscripciones\": [\"auditoria_id\", \"inscripcion_id\", \"usuario_id\", \"evento_id\", \"accion\", \"estado_anterior\", \"estado_nuevo\", \"fecha\", \"resultado\", \"detalle\"], \"Reasignaciones\": [\"reasignacion_id\", \"evento_id\", \"inscripcion_id\", \"usuario_id\", \"fecha\", \"orden_lista\", \"estado_anterior\", \"estado_nuevo\", \"resultado_notificacion\"], \"Recordatorios\": [\"recordatorio_id\", \"usuario_id\", \"evento_id\", \"inscripcion_id\", \"tipo_recordatorio\", \"fecha_programada\", \"fecha_envio\", \"estado\", \"clave_idempotencia\"], \"Notificaciones\": [\"notificacion_id\", \"usuario_id\", \"tipo\", \"titulo\", \"mensaje\", \"evento_id\", \"inscripcion_id\", \"fecha\", \"gmail_estado\", \"telegram_estado\", \"gmail_error\", \"telegram_error\", \"clave_idempotencia\"], \"Conversaciones\": [\"conversation_id\", \"usuario_id\", \"visitor_id\", \"fecha_inicio\", \"fecha_ultima_interaccion\", \"estado\"], \"Mensajes\": [\"message_id\", \"conversation_id\", \"usuario_id\", \"visitor_id\", \"rol\", \"mensaje\", \"timestamp\"]};\nconst operationUuid = $('Generar ID operación').first().json.operacion_uuid;\nif (!operationUuid) throw new Error('Falta ID operación');\nlet idCounter = 0;\nconst ctx = $('Configuración').first().json;\nconst req = ctx.request || {};\nconst cfg = ctx.config;\nconst now = new Date();\nconst iso = now.toISOString();\nconst writes = {};\nconst notifications = [];\nlet status = 200;\nlet response = {};\nfunction rows(sheet) {\n  return $('Leer ' + sheet).all().map(x => x.json).filter(x => x && Object.keys(x).some(k => k !== 'row_number'));\n}\nfunction id(prefix) { return prefix + '_' + (operationUuid + '_' + (++idCounter)); }\nfunction put(sheet, row) {\n  const cols = SCHEMAS[sheet];\n  const clean = {};\n  for (const k of cols) clean[k] = row[k] === undefined || row[k] === null ? '' : row[k];\n  (writes[sheet] ||= []).push(clean);\n  return clean;\n}\nfunction fail(code, message) { const e = new Error(message); e.http = code; throw e; }\nfunction text(value, name, min=1, max=200) {\n  if (typeof value !== 'string') fail(400, name + ' debe ser texto');\n  const s = value.trim();\n  if (s.length < min || s.length > max) fail(400, name + ' tiene una longitud inválida');\n  return s;\n}\nfunction email(value) {\n  const s = text(value, 'email', 3, 254).toLowerCase();\n  if (!/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(s)) fail(400, 'Email inválido');\n  return s;\n}\nfunction number(value, name, min=0, max=100000) {\n  if (value === '' || value === null || value === undefined || typeof value === 'boolean') fail(400, name + ' es obligatorio');\n  const n = Number(value);\n  if (!Number.isInteger(n) || n < min || n > max) fail(400, name + ' inválido');\n  return n;\n}\nfunction publicUser(u) {\n  const { usuario_id, nombre, email_normalizado, estado, fecha_registro, fecha_actualizacion } = u;\n  return { usuario_id, nombre, email_normalizado, estado, fecha_registro, fecha_actualizacion };\n}\nfunction token() {\n  return String(ctx.headers?.authorization || '').replace(/^Bearer\\s+/i, '').trim() || String(req.session_token || '').trim();\n}\nfunction auth() {\n  const t = token();\n  if (!t) fail(401, 'Sesión requerida');\n  const s = rows('Sesiones').find(x => x.session_token === t);\n  if (!s || s.estado !== 'ACTIVA' || !Number.isFinite(Date.parse(s.expira_en)) || Date.parse(s.expira_en) <= now.getTime()) fail(401, 'Sesión inválida o expirada');\n  const u = rows('Usuarios').find(x => x.usuario_id === s.usuario_id && x.estado === 'ACTIVO');\n  if (!u) fail(401, 'Usuario inactivo o inexistente');\n  if (req.usuario_id && req.usuario_id !== u.usuario_id) fail(403, 'No puedes acceder al perfil de otra persona');\n  return { user:u, session:s };\n}\nfunction linked(uid) { return rows('Vinculaciones').find(x => x.usuario_id === uid && x.estado === 'ACTIVA'); }\nfunction eventTime(e) {\n  const s = String(e.fecha) + 'T' + String(e.hora).slice(0,5) + ':00' + cfg.eventTimezoneOffset;\n  const t = Date.parse(s);\n  if (!Number.isFinite(t)) fail(400, 'Fecha u hora del evento inválida');\n  return t;\n}\nfunction activeRegistration(r) { return ['CONFIRMADA','LISTA_ESPERA'].includes(r.estado); }\nfunction available(e, registrations) {\n  return Math.max(0, Number(e.capacidad) - registrations.filter(r => r.evento_id === e.evento_id && r.estado === 'CONFIRMADA').length);\n}\nfunction notify(uid, type, title, message, eid='', iid='', key='') {\n  notifications.push({usuario_id:uid,tipo:type,titulo:title,mensaje:message,evento_id:eid,inscripcion_id:iid,clave_idempotencia:key || [uid,type,eid,iid,iso].join('|')});\n}\nfunction auditUser(uid, action, detail) {\n  put('Auditoria_Usuarios',{auditoria_id:id('AUD'),usuario_id:uid,accion:action,fecha:iso,resultado:'EXITOSO',detalle:detail});\n}\nfunction auditRegistration(r, action, previous) {\n  put('Auditoria_Inscripciones',{auditoria_id:id('AUD'),inscripcion_id:r.inscripcion_id,usuario_id:r.usuario_id,evento_id:r.evento_id,accion:action,estado_anterior:previous,estado_nuevo:r.estado,fecha:iso,resultado:'EXITOSO',detalle:'Operación validada en n8n'});\n}\nfunction result() { return [{json:{writes,notifications,status,response,mode:ctx.mode,chat_id:ctx.chat_id || ''}}]; }\n\ntry {\n  let queued=0;\n  const all=rows('Recordatorios');\n  for(const e of rows('Eventos').filter(e=>e.estado==='PUBLICADO')) {\n    const delta=eventTime(e)-now.getTime();\n    if(delta<=0 || delta>cfg.reminderHours*3600000) continue;\n    for(const r of rows('Inscripciones').filter(r=>r.evento_id===e.evento_id && r.estado==='CONFIRMADA')) {\n      if(!rows('Usuarios').some(u=>u.usuario_id===r.usuario_id && u.estado==='ACTIVO')) continue;\n      const key=[r.usuario_id,e.evento_id,'ANTES_24H'].join('|');\n      const old=all.find(x=>x.clave_idempotencia===key);\n      if(old && old.estado!=='ERROR') continue;\n      put('Recordatorios',{recordatorio_id:old?.recordatorio_id||id('REC'),usuario_id:r.usuario_id,evento_id:e.evento_id,inscripcion_id:r.inscripcion_id,tipo_recordatorio:'ANTES_24H',fecha_programada:new Date(eventTime(e)-cfg.reminderHours*3600000).toISOString(),fecha_envio:'',estado:'PENDIENTE',clave_idempotencia:key});\n      notify(r.usuario_id,'RECORDATORIO','Recordatorio: '+e.nombre,'Tu evento será el '+e.fecha+' a las '+e.hora+' en '+e.lugar+'.',e.evento_id,r.inscripcion_id,key);\n      queued++;\n    }\n  }\n  response={ok:true,recordatorios_programados:queued};\n} catch(e) {status=e.http||500;response={ok:false,mensaje:e.http?e.message:'Error interno; revisa la ejecución en n8n'};}\nreturn result();\n"
       },
-      "id": "c2cfbc48-cdf6-49b6-b547-6080db55d3d9",
+      "id": "b38dd190-bb65-4e32-8ed1-f075d9c2ad88",
       "name": "Reglas de negocio",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        1800,
-        0
+        1808,
+        336
       ]
     },
     {
       "parameters": {
-        "mode": "runOnceForAllItems",
         "jsCode": "const plan=$('Reglas de negocio').first().json; const list=plan.writes?.['Recordatorios']||[]; return list.length?list.map(json=>({json})):[{json:{_skip:true}}];"
       },
-      "id": "4cdd1fd7-9d50-42ea-9175-8d63f5a26b92",
+      "id": "d0380bd5-9d88-4cea-9281-de0a6c8c9885",
       "name": "Preparar Recordatorios",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
         0,
-        300
+        640
       ]
     },
     {
@@ -204,18 +217,17 @@
         },
         "options": {}
       },
-      "id": "d638f3b2-824c-48e4-b57c-090efd08af8a",
+      "id": "285dafd3-4b50-46e3-afe8-8c9bd7018d63",
       "name": "¿Escribir Recordatorios?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        300,
-        300
+        304,
+        640
       ]
     },
     {
       "parameters": {
-        "resource": "sheet",
         "operation": "appendOrUpdate",
         "documentId": {
           "__rl": true,
@@ -226,10 +238,6 @@
           "__rl": true,
           "value": "Recordatorios",
           "mode": "name"
-        },
-        "options": {
-          "cellFormat": "RAW",
-          "useAppend": true
         },
         "columns": {
           "mappingMode": "defineBelow",
@@ -341,31 +349,40 @@
           ],
           "attemptToConvertTypes": false,
           "convertFieldsToString": false
+        },
+        "options": {
+          "cellFormat": "RAW",
+          "useAppend": true
         }
       },
-      "id": "f908f2f8-9a12-4d6b-ac7d-93e95bd30303",
+      "id": "ade84140-dc6c-4dca-b0c9-1b5ad5cd6575",
       "name": "Guardar Recordatorios",
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.7,
       "position": [
-        600,
-        300
+        608,
+        640
       ],
       "alwaysOutputData": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "55L4jOkLMnG2B3fi",
+          "name": "Google Sheets account"
+        }
+      },
       "notes": "Selecciona tu credencial Google Sheets OAuth2. Escritura con clave estable y valores RAW."
     },
     {
       "parameters": {
-        "mode": "runOnceForAllItems",
         "jsCode": "return [{json:$('Reglas de negocio').first().json}];"
       },
-      "id": "9a90f920-3927-4ea6-9f6d-74f76533bd83",
+      "id": "91f4bc76-5ed8-40f2-bc94-f06f1210174a",
       "name": "Continuar Recordatorios",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        900,
-        300
+        912,
+        640
       ]
     },
     {
@@ -393,108 +410,101 @@
         },
         "options": {}
       },
-      "id": "9a35b77a-bfc1-49f1-b30c-0b2f65101e42",
+      "id": "c75444bf-bffe-4da6-ab08-29b4fc324db6",
       "name": "¿Hay notificaciones?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
         1200,
-        300
+        640
       ]
     },
     {
       "parameters": {
-        "mode": "runOnceForAllItems",
         "jsCode": "return $('Reglas de negocio').first().json.notifications.map(json=>({json}));"
       },
-      "id": "a4467472-1ecc-4968-b521-bd45666e3509",
+      "id": "65f698d7-c027-4a0c-b709-e3d545670690",
       "name": "Preparar notificaciones",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        1500,
-        300
+        1504,
+        640
       ]
     },
     {
       "parameters": {
-        "batchSize": 1,
         "options": {}
       },
-      "id": "76bc5b61-173c-4113-b074-429ddd557697",
+      "id": "6f6ebc23-741e-4907-b98a-1b0e33456eed",
       "name": "Loop notificaciones",
       "type": "n8n-nodes-base.splitInBatches",
       "typeVersion": 3,
       "position": [
-        1800,
-        300
+        1808,
+        640
       ]
     },
     {
       "parameters": {
-        "source": "database",
         "workflowId": {
           "__rl": true,
           "value": "={{ $('Configuración').first().json.config.workflowNotificaciones }}",
           "mode": "id"
         },
-        "mode": "once",
         "options": {
           "waitForSubWorkflow": true
         }
       },
-      "id": "e01ef656-9826-44e0-8f5e-6c11b242635c",
+      "id": "a9cae7fe-620b-4fd6-8211-d29324ef66d7",
       "name": "Notificar WF09",
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
       "position": [
         0,
-        600
+        944
       ],
-      "onError": "continueRegularOutput",
       "alwaysOutputData": true,
+      "onError": "continueRegularOutput",
       "notes": "Configura workflowNotificaciones con el ID real de WF09 después de importarlo. Se ejecuta una notificación por vez."
     },
     {
       "parameters": {
-        "mode": "runOnceForAllItems",
         "jsCode": "return [{json:{notification:$('Loop notificaciones').first().json,result:$input.first().json}}];"
       },
-      "id": "1d51bdef-b156-4d91-90a3-493549bd48c9",
+      "id": "f350b849-9146-4eb5-a941-e046cfb4095f",
       "name": "Capturar resultado notificación",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        300,
-        600
+        304,
+        944
       ]
     },
     {
       "parameters": {
-        "mode": "runOnceForAllItems",
         "jsCode": "const plan=JSON.parse(JSON.stringify($('Reglas de negocio').first().json));\nconst results=$input.all().map(x=>x.json).filter(x=>x.notification && x.result);\nconst done=results.map(x=>({clave_idempotencia:x.notification.clave_idempotencia,...x.result}));\nif(plan.notifications.length) plan.response.notificaciones=done;\nplan.writes={};\nconst original=$('Reglas de negocio').first().json.writes.Recordatorios||[];\nplan.writes.Recordatorios=original.map(r=>{const x=results.find(x=>x.notification.clave_idempotencia===r.clave_idempotencia)?.result;const sent=x?.gmail_estado==='ENVIADO' && x?.telegram_estado==='ENVIADO';const pending=x?.gmail_estado==='PENDIENTE'||x?.telegram_estado==='PENDIENTE';return {...r,estado:sent?'ENVIADO':pending?'PENDIENTE':'ERROR',fecha_envio:sent?new Date().toISOString():''};});\nreturn [{json:plan}];"
       },
-      "id": "4b708701-4b06-4958-92cb-6f93764c4357",
+      "id": "a7402f13-4a5e-47e6-adbd-df615d853910",
       "name": "Resultado final",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        600,
-        600
+        608,
+        944
       ]
     },
     {
       "parameters": {
-        "mode": "runOnceForAllItems",
         "jsCode": "const plan=$('Resultado final').first().json; const list=plan.writes?.['Recordatorios']||[]; return list.length?list.map(json=>({json})):[{json:{_skip:true}}];"
       },
-      "id": "7bb9e27b-aadd-4847-8805-90ede6260de7",
+      "id": "4b1b9a23-8ca8-46c1-9d96-6e47ded9477b",
       "name": "Resultado Preparar Recordatorios",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        900,
-        600
+        912,
+        944
       ]
     },
     {
@@ -522,18 +532,17 @@
         },
         "options": {}
       },
-      "id": "bec2e7bf-4d96-49de-8c7e-c0baf0f27f43",
+      "id": "353a0f6f-ebad-462b-9190-9ce4f066e4ce",
       "name": "Resultado ¿Escribir Recordatorios?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
         1200,
-        600
+        944
       ]
     },
     {
       "parameters": {
-        "resource": "sheet",
         "operation": "appendOrUpdate",
         "documentId": {
           "__rl": true,
@@ -544,10 +553,6 @@
           "__rl": true,
           "value": "Recordatorios",
           "mode": "name"
-        },
-        "options": {
-          "cellFormat": "RAW",
-          "useAppend": true
         },
         "columns": {
           "mappingMode": "defineBelow",
@@ -659,63 +664,73 @@
           ],
           "attemptToConvertTypes": false,
           "convertFieldsToString": false
+        },
+        "options": {
+          "cellFormat": "RAW",
+          "useAppend": true
         }
       },
-      "id": "d542f8c8-4384-470c-9df6-224e8cd8fe47",
+      "id": "f233ddd1-738e-40f5-8c25-4d804706f496",
       "name": "Resultado Guardar Recordatorios",
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.7,
       "position": [
-        1500,
-        600
+        1504,
+        944
       ],
       "alwaysOutputData": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "55L4jOkLMnG2B3fi",
+          "name": "Google Sheets account"
+        }
+      },
       "notes": "Selecciona tu credencial Google Sheets OAuth2. Escritura con clave estable y valores RAW."
     },
     {
       "parameters": {
-        "mode": "runOnceForAllItems",
         "jsCode": "return [{json:$('Resultado final').first().json}];"
       },
-      "id": "ff72deb7-e445-440f-b190-23471a6b43e7",
+      "id": "28173af7-0fe0-482c-8ad7-0e5b0e6e8f52",
       "name": "Resultado Continuar Recordatorios",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        1800,
-        600
+        1808,
+        944
       ]
     },
     {
       "parameters": {
-        "mode": "runOnceForAllItems",
         "jsCode": "return [{json:$('Resultado final').first().json.response}];"
       },
-      "id": "c11c081c-b763-414d-b0cf-7a561e57dbb9",
+      "id": "380ba229-cdbc-4381-8e03-fa7cfa66da3f",
       "name": "Resumen ejecución",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
         0,
-        900
+        1232
       ]
     },
     {
       "parameters": {
-        "content": "## WF08_recordatorios\n1. Edita Configuración: IDs de Sheets.\n2. Selecciona credenciales en cada integración.\n3. Configura WF09 en Execute Sub-workflow.\n4. Lee README y prueba antes de publicar.\nGenerado para importar; no verificado contra tu Docker.\nUsuarios existentes: el hash debe usar scrypt compatible.",
-        "height": 250,
-        "width": 520
+        "action": "generate",
+        "dataPropertyName": "operacion_uuid",
+        "encodingType": "uuid"
       },
-      "id": "17097d0f-527c-4eeb-9cda-2772ce711443",
-      "name": "LEER ANTES DE ACTIVAR",
-      "type": "n8n-nodes-base.stickyNote",
+      "id": "2dbae010-4d52-4206-9ecc-3b807c02ac87",
+      "name": "Generar ID operación",
+      "type": "n8n-nodes-base.crypto",
       "typeVersion": 1,
       "position": [
-        0,
-        -330
-      ]
+        1588,
+        436
+      ],
+      "executeOnce": true
     }
   ],
+  "pinData": {},
   "connections": {
     "Schedule Trigger": {
       "main": [
@@ -776,7 +791,7 @@
       "main": [
         [
           {
-            "node": "Reglas de negocio",
+            "node": "Generar ID operación",
             "type": "main",
             "index": 0
           }
@@ -975,19 +990,30 @@
           }
         ]
       ]
+    },
+    "Generar ID operación": {
+      "main": [
+        [
+          {
+            "node": "Reglas de negocio",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "active": false,
   "settings": {
     "executionOrder": "v1",
-    "timezone": "America/Bogota",
-    "saveDataSuccessExecution": "none",
-    "saveDataErrorExecution": "none",
-    "saveManualExecutions": false,
-    "executionTimeout": 300
+    "binaryMode": "separate"
   },
-  "tags": [],
+  "versionId": "9b9356fa-3c1b-4de2-ac32-700cf55a7ad8",
   "meta": {
-    "templateCredsSetupCompleted": false
-  }
+    "templateCredsSetupCompleted": true,
+    "instanceId": "8870ad36925f8f4776afd66fcc7d35e30431f422812b897599ebae4cef0121f7"
+  },
+  "nodeGroups": [],
+  "id": "RtpqvzHzjoI1dE8a",
+  "tags": []
 }

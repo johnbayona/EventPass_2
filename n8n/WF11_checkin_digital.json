@@ -15,21 +15,21 @@
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 2,
       "position": [
-        0,
+        -256,
         0
       ],
       "webhookId": "dbaaa63b-8510-4196-bf1a-533037664235"
     },
     {
       "parameters": {
-        "jsCode": "const config = {\n  \"sheets\": {\n    \"EP01_Usuarios\": \"REEMPLAZAR_ID_EP01_Usuarios\",\n    \"EP02_Sesiones\": \"REEMPLAZAR_ID_EP02_Sesiones\",\n    \"EP04_Eventos\": \"REEMPLAZAR_ID_EP04_Eventos\",\n    \"EP06_Inscripciones\": \"REEMPLAZAR_ID_EP06_Inscripciones\",\n    \"EP11_Checkin\": \"REEMPLAZAR_ID_EP11_Checkin\"\n  },\n  \"workflowNotificaciones\": \"SELECCIONAR_ID_WF09\"\n};\nconst raw=$input.first().json;return [{json:{config,request:raw.body||{},headers:raw.headers||{}}}];"
+        "jsCode": "const config = {\n  \"sheets\": {\n    \"EP01_Usuarios\": \"10GNs5mk6rcwvB2uFBeSgQC3_c1xpEuDmPwOm79lzZm4\",\n    \"EP02_Sesiones\": \"1_1_0buDCtklJDvIGBSo53S1yRFazZyShY3a_2WZae3A\",\n    \"EP04_Eventos\": \"1EOUz26SJx3YJDMqf1kar4us3HbkdjbOy9OrHtV3RO6Y\",\n    \"EP06_Inscripciones\": \"1cFQwBhsM7j9gq5G4e_S3Fs8acBRXibuxNsCCGmd_u7o\",\n    \"EP11_Checkin\": \"1IwwolhTU-2oIjX6awjWofZqwly_eQDJs2U0BwkxeNpQ\"\n  },\n  \"workflowNotificaciones\": \"ru4tq3hBGPpnL36S\"\n};\nconst raw=$input.first().json;return [{json:{config,request:raw.body||{},headers:raw.headers||{}}}];"
       },
       "id": "13151503-658b-49fa-af24-144d1bae63e5",
       "name": "Configuración",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        272,
+        -112,
         0
       ]
     },
@@ -43,7 +43,7 @@
       "type": "n8n-nodes-base.crypto",
       "typeVersion": 1,
       "position": [
-        544,
+        16,
         0
       ]
     },
@@ -51,13 +51,17 @@
       "parameters": {
         "documentId": {
           "__rl": true,
-          "value": "={{ $('Configuración').first().json.config.sheets.EP01_Usuarios }}",
-          "mode": "id"
+          "value": "10GNs5mk6rcwvB2uFBeSgQC3_c1xpEuDmPwOm79lzZm4",
+          "mode": "list",
+          "cachedResultName": "EP01_Usuarios",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/10GNs5mk6rcwvB2uFBeSgQC3_c1xpEuDmPwOm79lzZm4/edit?usp=drivesdk"
         },
         "sheetName": {
           "__rl": true,
-          "value": "Usuarios",
-          "mode": "name"
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Usuarios",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/10GNs5mk6rcwvB2uFBeSgQC3_c1xpEuDmPwOm79lzZm4/edit#gid=0"
         },
         "options": {}
       },
@@ -66,8 +70,8 @@
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.5,
       "position": [
-        816,
-        0
+        144,
+        -16
       ],
       "executeOnce": true,
       "alwaysOutputData": true,
@@ -82,13 +86,17 @@
       "parameters": {
         "documentId": {
           "__rl": true,
-          "value": "={{ $('Configuración').first().json.config.sheets.EP02_Sesiones }}",
-          "mode": "id"
+          "value": "1_1_0buDCtklJDvIGBSo53S1yRFazZyShY3a_2WZae3A",
+          "mode": "list",
+          "cachedResultName": "EP02_Sesiones",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1_1_0buDCtklJDvIGBSo53S1yRFazZyShY3a_2WZae3A/edit?usp=drivesdk"
         },
         "sheetName": {
           "__rl": true,
-          "value": "Sesiones",
-          "mode": "name"
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sesiones",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1_1_0buDCtklJDvIGBSo53S1yRFazZyShY3a_2WZae3A/edit#gid=0"
         },
         "options": {}
       },
@@ -97,7 +105,42 @@
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.5,
       "position": [
-        1088,
+        288,
+        -16
+      ],
+      "executeOnce": true,
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "55L4jOkLMnG2B3fi",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1EOUz26SJx3YJDMqf1kar4us3HbkdjbOy9OrHtV3RO6Y",
+          "mode": "list",
+          "cachedResultName": "EP04_Eventos",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1EOUz26SJx3YJDMqf1kar4us3HbkdjbOy9OrHtV3RO6Y/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Eventos",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1EOUz26SJx3YJDMqf1kar4us3HbkdjbOy9OrHtV3RO6Y/edit#gid=0"
+        },
+        "options": {}
+      },
+      "id": "5e2d61a6-1463-47c2-8213-69d8d7ce04ee",
+      "name": "Leer Eventos",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        448,
         0
       ],
       "executeOnce": true,
@@ -113,44 +156,17 @@
       "parameters": {
         "documentId": {
           "__rl": true,
-          "value": "={{ $('Configuración').first().json.config.sheets.EP04_Eventos }}",
-          "mode": "id"
+          "value": "1cFQwBhsM7j9gq5G4e_S3Fs8acBRXibuxNsCCGmd_u7o",
+          "mode": "list",
+          "cachedResultName": "EP06_Inscripciones",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1cFQwBhsM7j9gq5G4e_S3Fs8acBRXibuxNsCCGmd_u7o/edit?usp=drivesdk"
         },
         "sheetName": {
           "__rl": true,
-          "value": "Eventos",
-          "mode": "name"
-        },
-        "options": {}
-      },
-      "id": "5e2d61a6-1463-47c2-8213-69d8d7ce04ee",
-      "name": "Leer Eventos",
-      "type": "n8n-nodes-base.googleSheets",
-      "typeVersion": 4.5,
-      "position": [
-        0,
-        272
-      ],
-      "executeOnce": true,
-      "alwaysOutputData": true,
-      "credentials": {
-        "googleSheetsOAuth2Api": {
-          "id": "55L4jOkLMnG2B3fi",
-          "name": "Google Sheets account"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "documentId": {
-          "__rl": true,
-          "value": "={{ $('Configuración').first().json.config.sheets.EP06_Inscripciones }}",
-          "mode": "id"
-        },
-        "sheetName": {
-          "__rl": true,
-          "value": "Inscripciones",
-          "mode": "name"
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Inscripciones",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1cFQwBhsM7j9gq5G4e_S3Fs8acBRXibuxNsCCGmd_u7o/edit#gid=0"
         },
         "options": {}
       },
@@ -159,8 +175,8 @@
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.5,
       "position": [
-        272,
-        272
+        592,
+        -16
       ],
       "executeOnce": true,
       "alwaysOutputData": true,
@@ -175,13 +191,17 @@
       "parameters": {
         "documentId": {
           "__rl": true,
-          "value": "={{ $('Configuración').first().json.config.sheets.EP11_Checkin }}",
-          "mode": "id"
+          "value": "1IwwolhTU-2oIjX6awjWofZqwly_eQDJs2U0BwkxeNpQ",
+          "mode": "list",
+          "cachedResultName": "EP11_Checkin",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1IwwolhTU-2oIjX6awjWofZqwly_eQDJs2U0BwkxeNpQ/edit?usp=drivesdk"
         },
         "sheetName": {
           "__rl": true,
-          "value": "Checkins",
-          "mode": "name"
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Checkins",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1IwwolhTU-2oIjX6awjWofZqwly_eQDJs2U0BwkxeNpQ/edit#gid=0"
         },
         "options": {}
       },
@@ -190,8 +210,8 @@
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.5,
       "position": [
-        544,
-        272
+        736,
+        -16
       ],
       "executeOnce": true,
       "alwaysOutputData": true,
@@ -211,8 +231,8 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        816,
-        272
+        880,
+        -16
       ]
     },
     {
@@ -245,8 +265,8 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        1088,
-        272
+        1024,
+        -16
       ]
     },
     {
@@ -316,8 +336,8 @@
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.5,
       "position": [
-        0,
-        528
+        -240,
+        176
       ],
       "credentials": {
         "googleSheetsOAuth2Api": {
@@ -331,8 +351,10 @@
         "operation": "append",
         "documentId": {
           "__rl": true,
-          "value": "={{ $('Configuración').first().json.config.sheets.EP11_Checkin }}",
-          "mode": "id"
+          "value": "1IwwolhTU-2oIjX6awjWofZqwly_eQDJs2U0BwkxeNpQ",
+          "mode": "list",
+          "cachedResultName": "EP11_Checkin",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1IwwolhTU-2oIjX6awjWofZqwly_eQDJs2U0BwkxeNpQ/edit?usp=drivesdk"
         },
         "sheetName": {
           "__rl": true,
@@ -435,8 +457,8 @@
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.5,
       "position": [
-        272,
-        528
+        -32,
+        192
       ],
       "credentials": {
         "googleSheetsOAuth2Api": {
@@ -475,8 +497,8 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        544,
-        528
+        112,
+        192
       ]
     },
     {
@@ -488,8 +510,8 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        816,
-        528
+        288,
+        176
       ]
     },
     {
@@ -508,8 +530,8 @@
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
       "position": [
-        1088,
-        528
+        496,
+        176
       ],
       "alwaysOutputData": true,
       "onError": "continueRegularOutput"
@@ -523,8 +545,8 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        0,
-        784
+        768,
+        176
       ]
     },
     {
@@ -536,8 +558,8 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        272,
-        784
+        416,
+        336
       ]
     },
     {
@@ -561,11 +583,12 @@
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.4,
       "position": [
-        544,
-        784
+        960,
+        192
       ]
     }
   ],
+  "pinData": {},
   "connections": {
     "Webhook": {
       "main": [
@@ -769,12 +792,12 @@
       ]
     }
   },
-  "active": false,
+  "active": true,
   "settings": {
     "executionOrder": "v1",
     "binaryMode": "separate"
   },
-  "versionId": "60cac6bd-a177-49fd-aa22-d5ec7f633a59",
+  "versionId": "cc8aa4f0-589f-4380-bbf4-20c70e588c42",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "8870ad36925f8f4776afd66fcc7d35e30431f422812b897599ebae4cef0121f7"

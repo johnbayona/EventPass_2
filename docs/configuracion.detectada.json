@@ -1,0 +1,21 @@
+{
+  "sheets": {
+    "EP01_Usuarios": "10GNs5mk6rcwvB2uFBeSgQC3_c1xpEuDmPwOm79lzZm4",
+    "EP02_Sesiones": "1_1_0buDCtklJDvIGBSo53S1yRFazZyShY3a_2WZae3A",
+    "EP03_Telegram": "1lh37TRoZXLp6aGvqu2oAlrzbqLiM3li_O5tfioWFt6Y",
+    "EP04_Eventos": "1EOUz26SJx3YJDMqf1kar4us3HbkdjbOy9OrHtV3RO6Y",
+    "EP05_Catalogo_Log": "1fMyl2ii43NK02RCE2yJyYslYzIVaIIa1Sp5Ec7-FMJE",
+    "EP06_Inscripciones": "1cFQwBhsM7j9gq5G4e_S3Fs8acBRXibuxNsCCGmd_u7o",
+    "EP07_Reasignaciones": "1cY_2gjiithr4nvWdjQcYaTDwF_-q2Topm0HhTIHvP1g",
+    "EP08_Recordatorios": "1hC4YF3H2uOheexZrTbYz0D4966H6X2HoZbGKiIE1Wvw",
+    "EP09_Notificaciones": "1OIWc-saMHFfSuHP-Ge7u40BVAP_XwoqMMHFABAarSdg",
+    "EP10_Soporte": "1NgEHnYSKAw8JLpzi-11Rmu6pDnW_Oh50QMFPV4BchCs",
+    "EP11_Checkin": "1IwwolhTU-2oIjX6awjWofZqwly_eQDJs2U0BwkxeNpQ"
+  },
+  "sessionHours": 8,
+  "linkMinutes": 10,
+  "reminderHours": 24,
+  "eventTimezoneOffset": "-05:00",
+  "workflowNotificaciones": "ru4tq3hBGPpnL36S",
+  "frontendOrigin": "http://localhost:5173"
+}

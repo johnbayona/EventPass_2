@@ -483,7 +483,7 @@
     },
     {
       "parameters": {
-        "jsCode": "// EDITA SOLO config. Los IDs de Sheets son públicos identificadores, no credenciales.\nconst config = {\n  \"sheets\": {\n    \"EP01_Usuarios\": \"REEMPLAZAR_ID_EP01_Usuarios\",\n    \"EP02_Sesiones\": \"REEMPLAZAR_ID_EP02_Sesiones\",\n    \"EP03_Telegram\": \"REEMPLAZAR_ID_EP03_Telegram\",\n    \"EP04_Eventos\": \"REEMPLAZAR_ID_EP04_Eventos\",\n    \"EP05_Catalogo_Log\": \"REEMPLAZAR_ID_EP05_Catalogo_Log\",\n    \"EP06_Inscripciones\": \"REEMPLAZAR_ID_EP06_Inscripciones\",\n    \"EP07_Reasignaciones\": \"REEMPLAZAR_ID_EP07_Reasignaciones\",\n    \"EP08_Recordatorios\": \"REEMPLAZAR_ID_EP08_Recordatorios\",\n    \"EP09_Notificaciones\": \"REEMPLAZAR_ID_EP09_Notificaciones\",\n    \"EP10_Soporte\": \"REEMPLAZAR_ID_EP10_Soporte\"\n  },\n  \"sessionHours\": 8,\n  \"linkMinutes\": 10,\n  \"reminderHours\": 24,\n  \"eventTimezoneOffset\": \"-05:00\",\n  \"workflowNotificaciones\": \"SELECCIONAR_WF09_EN_EL_NODO\",\n  \"frontendOrigin\": \"http://localhost:5173\"\n};\nconst raw = $input.first().json;\nconst telegram = !!raw.message;\nconst request = telegram ? {text:raw.message.text || ''} : (raw.body || raw);\nreturn [{json:{config,request,headers:raw.headers||{},mode:telegram?'telegram':'http',chat_id:telegram?String(raw.message.chat.id):'',chat_type:raw.message?.chat?.type||'',telegram_username:raw.message?.from?.username||''}}];\n"
+        "jsCode": "// EDITA SOLO config. Los IDs de Sheets son públicos identificadores, no credenciales.\nconst config = {\n  \"sheets\": {\n  \"EP01_Usuarios\": \"10GNs5mk6rcwvB2uFBeSgQC3_c1xpEuDmPwOm79lzZm4\",\n    \"EP02_Sesiones\": \"1_1_0buDCtklJDvIGBSo53S1yRFazZyShY3a_2WZae3A\",\n    \"EP03_Telegram\": \"1lh37TRoZXLp6aGvqu2oAlrzbqLiM3li_O5tfioWFt6Y\",\n    \"EP04_Eventos\": \"1EOUz26SJx3YJDMqf1kar4us3HbkdjbOy9OrHtV3RO6Y\",\n    \"EP05_Catalogo_Log\": \"1fMyl2ii43NK02RCE2yJyYslYzIVaIIa1Sp5Ec7-FMJE\",\n    \"EP06_Inscripciones\": \"1cFQwBhsM7j9gq5G4e_S3Fs8acBRXibuxNsCCGmd_u7o\",\n    \"EP07_Reasignaciones\": \"1cY_2gjiithr4nvWdjQcYaTDwF_-q2Topm0HhTIHvP1g\",\n    \"EP08_Recordatorios\": \"1hC4YF3H2uOheexZrTbYz0D4966H6X2HoZbGKiIE1Wvw\",\n    \"EP09_Notificaciones\": \"1OIWc-saMHFfSuHP-Ge7u40BVAP_XwoqMMHFABAarSdg\",\n    \"EP10_Soporte\": \"1NgEHnYSKAw8JLpzi-11Rmu6pDnW_Oh50QMFPV4BchCs\"\n\n  },\n  \"sessionHours\": 8,\n  \"linkMinutes\": 10,\n  \"reminderHours\": 24,\n  \"eventTimezoneOffset\": \"-05:00\",\n  \"workflowNotificaciones\": \"ru4tq3hBGPpnL36S\",\n  \"frontendOrigin\": \"http://localhost:5173\"\n};\nconst raw = $input.first().json;\nconst telegram = !!raw.message;\nconst request = telegram ? {text:raw.message.text || ''} : (raw.body || raw);\nreturn [{json:{config,request,headers:raw.headers||{},mode:telegram?'telegram':'http',chat_id:telegram?String(raw.message.chat.id):'',chat_type:raw.message?.chat?.type||'',telegram_username:raw.message?.from?.username||''}}];\n"
       },
       "id": "5cac28b5-855c-4e19-9d11-1b876c531744",
       "name": "Configuración",
@@ -558,6 +558,7 @@
       ]
     }
   ],
+  "pinData": {},
   "connections": {
     "Leer Sesiones": {
       "main": [
@@ -755,7 +756,7 @@
     "executionOrder": "v1",
     "binaryMode": "separate"
   },
-  "versionId": "c85aac7b-3e9a-4acb-b370-129c140cee9d",
+  "versionId": "865f7d6e-b526-4700-ae91-62c1417fc129",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "8870ad36925f8f4776afd66fcc7d35e30431f422812b897599ebae4cef0121f7"

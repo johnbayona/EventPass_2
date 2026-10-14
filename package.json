@@ -13,7 +13,9 @@
     "test:examen": "node --test tests/wf11.test.cjs",
     "audit:workflows": "node scripts/auditar-workflows.mjs",
     "preparar:eventos": "node scripts/preparar-eventos.mjs",
-    "test:catalogo": "node --test tests/catalogo-revision.test.cjs"
+    "test:catalogo": "node --test tests/catalogo-revision.test.cjs",
+    "build:production": "node scripts/build.mjs --production",
+    "test:config": "node --test tests/config-produccion.test.mjs"
   },
   "engines": {
     "node": ">=22"

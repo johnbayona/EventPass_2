@@ -9,12 +9,13 @@
     "EP07_Reasignaciones": "REEMPLAZAR_ID_EP07_Reasignaciones",
     "EP08_Recordatorios": "REEMPLAZAR_ID_EP08_Recordatorios",
     "EP09_Notificaciones": "REEMPLAZAR_ID_EP09_Notificaciones",
-    "EP10_Soporte": "REEMPLAZAR_ID_EP10_Soporte"
+    "EP10_Soporte": "REEMPLAZAR_ID_EP10_Soporte",
+    "EP11_Checkin": "REEMPLAZAR_ID_EP11_Checkin"
   },
   "sessionHours": 8,
   "linkMinutes": 10,
   "reminderHours": 24,
   "eventTimezoneOffset": "-05:00",
-  "workflowNotificaciones": "SELECCIONAR_WF09_EN_EL_NODO",
+  "workflowNotificaciones": "SELECCIONAR_WF09",
   "frontendOrigin": "http://localhost:5173"
 }

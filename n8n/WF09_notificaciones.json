@@ -1,5 +1,5 @@
 {
-  "name": "WF09 — Notificaciones",
+  "name": "WF09 — Notificaciones — Emprende365",
   "nodes": [
     {
       "parameters": {
@@ -841,6 +841,7 @@
       ]
     }
   ],
+  "pinData": {},
   "connections": {
     "Entrada subworkflow": {
       "main": [
@@ -1008,13 +1009,7 @@
             "index": 0
           }
         ],
-        [
-          {
-            "node": "Consolidar canales",
-            "type": "main",
-            "index": 0
-          }
-        ]
+        []
       ]
     },
     "Enviar Telegram": {
@@ -1124,12 +1119,12 @@
       ]
     }
   },
-  "active": false,
+  "active": true,
   "settings": {
     "executionOrder": "v1",
     "binaryMode": "separate"
   },
-  "versionId": "f5fc675d-f2a9-44be-8c7f-ce27c75f1ffa",
+  "versionId": "fb1bf127-c822-45c0-b3a8-bb940f824a36",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "8870ad36925f8f4776afd66fcc7d35e30431f422812b897599ebae4cef0121f7"

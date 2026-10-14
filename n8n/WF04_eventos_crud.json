@@ -1,208 +1,187 @@
 {
-  "name": "WF04_eventos_crud — Emprende365",
+  "name": "WF04 — Administración de eventos — Emprende365",
   "nodes": [
     {
       "parameters": {
         "authentication": "basicAuth",
+        "path": "68da193c-4498-4a5c-9f91-31277e2f1773",
         "formTitle": "EventPass — Administración de eventos",
-        "formDescription": "Solo administrador. CREATE requiere todos los campos salvo imagen_url. READ sin ID lista todos. UPDATE conserva los campos vacíos.",
+        "formDescription": "Administración Emprende365. CREATE: completa nombre, categoría, descripción, fecha, hora, lugar, capacidad y organizador. READ: evento_id opcional. UPDATE: evento_id y campos a cambiar. CANCEL/CLOSE: evento_id.",
         "formFields": {
           "values": [
             {
-              "fieldLabel": "operacion",
+              "fieldLabel": "evento_id"
+            },
+            {
+              "fieldLabel": "nombre"
+            },
+            {
+              "fieldLabel": "categoria",
               "fieldType": "dropdown",
               "fieldOptions": {
                 "values": [
                   {
-                    "option": "CREATE"
-                  },
-                  {
-                    "option": "READ"
-                  },
-                  {
-                    "option": "UPDATE"
-                  },
-                  {
-                    "option": "CANCEL"
-                  },
-                  {
-                    "option": "CLOSE"
+                    "option": "EMPRENDIMIENTO"
                   }
                 ]
-              },
-              "requiredField": true
-            },
-            {
-              "fieldLabel": "evento_id",
-              "fieldType": "text",
-              "requiredField": false
-            },
-            {
-              "fieldLabel": "nombre",
-              "fieldType": "text",
-              "requiredField": false
-            },
-            {
-              "fieldLabel": "categoria",
-              "fieldType": "text",
-              "requiredField": false
+              }
             },
             {
               "fieldLabel": "descripcion",
-              "fieldType": "textarea",
-              "requiredField": false
+              "fieldType": "textarea"
             },
             {
-              "fieldLabel": "fecha",
-              "fieldType": "text",
-              "requiredField": false
+              "fieldLabel": "fecha"
             },
             {
-              "fieldLabel": "hora",
-              "fieldType": "text",
-              "requiredField": false
+              "fieldLabel": "hora"
             },
             {
-              "fieldLabel": "lugar",
-              "fieldType": "text",
-              "requiredField": false
+              "fieldLabel": "lugar"
             },
             {
-              "fieldLabel": "capacidad",
-              "fieldType": "text",
-              "requiredField": false
+              "fieldLabel": "capacidad"
             },
             {
-              "fieldLabel": "imagen_url",
-              "fieldType": "text",
-              "requiredField": false
+              "fieldLabel": "imagen_url"
             },
             {
-              "fieldLabel": "organizador",
-              "fieldType": "text",
-              "requiredField": false
+              "fieldLabel": "organizador"
             },
             {
-              "fieldLabel": "estado",
-              "fieldType": "text",
-              "requiredField": false
+              "fieldLabel": "estado"
             }
           ]
         },
         "responseMode": "responseNode",
-        "options": {
-          "path": "eventpass-admin-eventos"
-        }
+        "options": {}
       },
-      "id": "e182cfcb-0248-4c4a-9344-812e37263f12",
+      "id": "d9ff44fc-2217-4480-9151-07515aef218e",
       "name": "Formulario administrador",
       "type": "n8n-nodes-base.formTrigger",
       "typeVersion": 2.1,
       "position": [
-        0,
-        0
+        -1136,
+        544
       ],
-      "webhookId": "fd49ca0a-ea5e-4eb5-949c-4ea7b26ceffa",
+      "webhookId": "68da193c-4498-4a5c-9f91-31277e2f1773",
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "LTo30Xnv2SwsMEQ2",
+          "name": "Unnamed credential"
+        }
+      },
       "notes": "Selecciona una credencial Basic Auth exclusiva del administrador. No compartir en el frontend."
     },
     {
       "parameters": {
-        "mode": "runOnceForAllItems",
-        "jsCode": "// EDITA SOLO config. Los IDs de Sheets son públicos identificadores, no credenciales.\nconst config = {\n  \"sheets\": {\n    \"EP01_Usuarios\": \"REEMPLAZAR_ID_EP01_Usuarios\",\n    \"EP02_Sesiones\": \"REEMPLAZAR_ID_EP02_Sesiones\",\n    \"EP03_Telegram\": \"REEMPLAZAR_ID_EP03_Telegram\",\n    \"EP04_Eventos\": \"REEMPLAZAR_ID_EP04_Eventos\",\n    \"EP05_Catalogo_Log\": \"REEMPLAZAR_ID_EP05_Catalogo_Log\",\n    \"EP06_Inscripciones\": \"REEMPLAZAR_ID_EP06_Inscripciones\",\n    \"EP07_Reasignaciones\": \"REEMPLAZAR_ID_EP07_Reasignaciones\",\n    \"EP08_Recordatorios\": \"REEMPLAZAR_ID_EP08_Recordatorios\",\n    \"EP09_Notificaciones\": \"REEMPLAZAR_ID_EP09_Notificaciones\",\n    \"EP10_Soporte\": \"REEMPLAZAR_ID_EP10_Soporte\"\n  },\n  \"sessionHours\": 8,\n  \"linkMinutes\": 10,\n  \"reminderHours\": 24,\n  \"eventTimezoneOffset\": \"-05:00\",\n  \"workflowNotificaciones\": \"SELECCIONAR_WF09_EN_EL_NODO\",\n  \"frontendOrigin\": \"http://localhost:5173\"\n};\nconst raw = $input.first().json;\nconst telegram = !!raw.message;\nconst request = telegram ? {text:raw.message.text || ''} : (raw.body || raw);\nreturn [{json:{config,request,headers:raw.headers||{},mode:telegram?'telegram':'http',chat_id:telegram?String(raw.message.chat.id):'',chat_type:raw.message?.chat?.type||'',telegram_username:raw.message?.from?.username||''}}];\n"
+        "jsCode": "// Completa los IDs de tus archivos de Google Sheets, conservando las comillas.\nconst config = {\n  sheets: {\n    EP04_Eventos: \"1EOUz26SJx3YJDMqf1kar4us3HbkdjbOy9OrHtV3RO6Y\",\n    EP06_Inscripciones: \"1cFQwBhsM7j9gq5G4e_S3Fs8acBRXibuxNsCCGmd_u7o\"\n  },\n  eventTimezoneOffset: \"-05:00\",\n  workflowNotificaciones: \"ru4tq3hBGPpnL36S\"\n};\nconst raw = $input.first().json;\nreturn [{json:{config,request:raw.body || raw,headers:raw.headers || {},mode:\"http\",chat_id:\"\"}}];\n"
       },
-      "id": "55ed761c-0f0c-4c3c-9500-fa9fb6006362",
+      "id": "c2cdea4e-f15c-4dd0-b020-2fd63ed14a7e",
       "name": "Configuración",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        300,
-        0
+        -832,
+        544
       ]
     },
     {
       "parameters": {
-        "resource": "sheet",
-        "operation": "read",
         "documentId": {
           "__rl": true,
-          "value": "={{ $('Configuración').first().json.config.sheets.EP04_Eventos }}",
-          "mode": "id"
+          "value": "1EOUz26SJx3YJDMqf1kar4us3HbkdjbOy9OrHtV3RO6Y",
+          "mode": "list",
+          "cachedResultName": "EP04_Eventos",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1EOUz26SJx3YJDMqf1kar4us3HbkdjbOy9OrHtV3RO6Y/edit?usp=drivesdk"
         },
         "sheetName": {
           "__rl": true,
-          "value": "Eventos",
-          "mode": "name"
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Eventos",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1EOUz26SJx3YJDMqf1kar4us3HbkdjbOy9OrHtV3RO6Y/edit#gid=0"
         },
-        "options": {
-          "returnFirstMatch": false
-        }
+        "options": {}
       },
-      "id": "850399de-744c-4ca9-a305-bed15593c9de",
+      "id": "3e82c81b-40e3-4ce2-8681-6cd957afe461",
       "name": "Leer Eventos",
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.7,
       "position": [
-        600,
-        0
+        -544,
+        544
       ],
       "alwaysOutputData": true,
+      "executeOnce": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "55L4jOkLMnG2B3fi",
+          "name": "Google Sheets account"
+        }
+      },
       "notes": "Selecciona tu credencial Google Sheets OAuth2. Lectura completa para persistencia académica. Always Output Data permite hojas sin filas."
     },
     {
       "parameters": {
-        "resource": "sheet",
-        "operation": "read",
         "documentId": {
           "__rl": true,
-          "value": "={{ $('Configuración').first().json.config.sheets.EP06_Inscripciones }}",
-          "mode": "id"
+          "value": "1cFQwBhsM7j9gq5G4e_S3Fs8acBRXibuxNsCCGmd_u7o",
+          "mode": "list",
+          "cachedResultName": "EP06_Inscripciones",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1cFQwBhsM7j9gq5G4e_S3Fs8acBRXibuxNsCCGmd_u7o/edit?usp=drivesdk"
         },
         "sheetName": {
           "__rl": true,
-          "value": "Inscripciones",
-          "mode": "name"
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Inscripciones",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1cFQwBhsM7j9gq5G4e_S3Fs8acBRXibuxNsCCGmd_u7o/edit#gid=0"
         },
-        "options": {
-          "returnFirstMatch": false
-        }
+        "options": {}
       },
-      "id": "6b61646d-e415-4690-ae30-d6a15e855422",
+      "id": "ce24732f-230e-4cce-bec4-345dfde7925b",
       "name": "Leer Inscripciones",
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.7,
       "position": [
-        900,
-        0
+        -240,
+        544
       ],
       "alwaysOutputData": true,
+      "executeOnce": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "55L4jOkLMnG2B3fi",
+          "name": "Google Sheets account"
+        }
+      },
       "notes": "Selecciona tu credencial Google Sheets OAuth2. Lectura completa para persistencia académica. Always Output Data permite hojas sin filas."
     },
     {
       "parameters": {
-        "mode": "runOnceForAllItems",
-        "jsCode": "const SCHEMAS={\"Usuarios\": [\"usuario_id\", \"nombre\", \"email_normalizado\", \"password_hash\", \"password_salt\", \"estado\", \"fecha_registro\", \"fecha_actualizacion\"], \"Auditoria_Usuarios\": [\"auditoria_id\", \"usuario_id\", \"accion\", \"fecha\", \"resultado\", \"detalle\"], \"Sesiones\": [\"session_id\", \"usuario_id\", \"session_token\", \"creada_en\", \"expira_en\", \"estado\", \"cerrada_en\", \"ultima_validacion\"], \"Codigos_Vinculacion\": [\"codigo_id\", \"usuario_id\", \"codigo\", \"creado_en\", \"expira_en\", \"estado\", \"usado_en\"], \"Vinculaciones\": [\"vinculacion_id\", \"usuario_id\", \"chat_id\", \"telegram_username\", \"fecha_vinculacion\", \"estado\"], \"Eventos\": [\"evento_id\", \"nombre\", \"categoria\", \"descripcion\", \"fecha\", \"hora\", \"lugar\", \"capacidad\", \"imagen_url\", \"organizador\", \"estado\", \"fecha_creacion\", \"fecha_actualizacion\"], \"Auditoria_Eventos\": [\"auditoria_id\", \"evento_id\", \"accion\", \"fecha\", \"resultado\", \"detalle\"], \"Consultas_Catalogo\": [\"consulta_id\", \"fecha\", \"tipo\", \"evento_id\", \"categoria\", \"resultado_count\", \"visitor_id\", \"status_http\"], \"Inscripciones\": [\"inscripcion_id\", \"usuario_id\", \"evento_id\", \"estado\", \"fecha_inscripcion\", \"fecha_actualizacion\", \"nombre_acreditacion\", \"observaciones\", \"origen\", \"orden_espera\"], \"Auditoria_Inscripciones\": [\"auditoria_id\", \"inscripcion_id\", \"usuario_id\", \"evento_id\", \"accion\", \"estado_anterior\", \"estado_nuevo\", \"fecha\", \"resultado\", \"detalle\"], \"Reasignaciones\": [\"reasignacion_id\", \"evento_id\", \"inscripcion_id\", \"usuario_id\", \"fecha\", \"orden_lista\", \"estado_anterior\", \"estado_nuevo\", \"resultado_notificacion\"], \"Recordatorios\": [\"recordatorio_id\", \"usuario_id\", \"evento_id\", \"inscripcion_id\", \"tipo_recordatorio\", \"fecha_programada\", \"fecha_envio\", \"estado\", \"clave_idempotencia\"], \"Notificaciones\": [\"notificacion_id\", \"usuario_id\", \"tipo\", \"titulo\", \"mensaje\", \"evento_id\", \"inscripcion_id\", \"fecha\", \"gmail_estado\", \"telegram_estado\", \"gmail_error\", \"telegram_error\", \"clave_idempotencia\"], \"Conversaciones\": [\"conversation_id\", \"usuario_id\", \"visitor_id\", \"fecha_inicio\", \"fecha_ultima_interaccion\", \"estado\"], \"Mensajes\": [\"message_id\", \"conversation_id\", \"usuario_id\", \"visitor_id\", \"rol\", \"mensaje\", \"timestamp\"]};\nconst crypto = require('crypto');\nconst ctx = $('Configuración').first().json;\nconst req = ctx.request || {};\nconst cfg = ctx.config;\nconst now = new Date();\nconst iso = now.toISOString();\nconst writes = {};\nconst notifications = [];\nlet status = 200;\nlet response = {};\nfunction rows(sheet) {\n  return $('Leer ' + sheet).all().map(x => x.json).filter(x => x && Object.keys(x).some(k => k !== 'row_number'));\n}\nfunction id(prefix) { return prefix + '_' + crypto.randomUUID(); }\nfunction put(sheet, row) {\n  const cols = SCHEMAS[sheet];\n  const clean = {};\n  for (const k of cols) clean[k] = row[k] === undefined || row[k] === null ? '' : row[k];\n  (writes[sheet] ||= []).push(clean);\n  return clean;\n}\nfunction fail(code, message) { const e = new Error(message); e.http = code; throw e; }\nfunction text(value, name, min=1, max=200) {\n  if (typeof value !== 'string') fail(400, name + ' debe ser texto');\n  const s = value.trim();\n  if (s.length < min || s.length > max) fail(400, name + ' tiene una longitud inválida');\n  return s;\n}\nfunction email(value) {\n  const s = text(value, 'email', 3, 254).toLowerCase();\n  if (!/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(s)) fail(400, 'Email inválido');\n  return s;\n}\nfunction number(value, name, min=0, max=100000) {\n  if (value === '' || value === null || value === undefined || typeof value === 'boolean') fail(400, name + ' es obligatorio');\n  const n = Number(value);\n  if (!Number.isInteger(n) || n < min || n > max) fail(400, name + ' inválido');\n  return n;\n}\nfunction publicUser(u) {\n  const { usuario_id, nombre, email_normalizado, estado, fecha_registro, fecha_actualizacion } = u;\n  return { usuario_id, nombre, email_normalizado, estado, fecha_registro, fecha_actualizacion };\n}\nfunction token() {\n  return String(ctx.headers?.authorization || '').replace(/^Bearer\\s+/i, '').trim() || String(req.session_token || '').trim();\n}\nfunction auth() {\n  const t = token();\n  if (!t) fail(401, 'Sesión requerida');\n  const s = rows('Sesiones').find(x => x.session_token === t);\n  if (!s || s.estado !== 'ACTIVA' || !Number.isFinite(Date.parse(s.expira_en)) || Date.parse(s.expira_en) <= now.getTime()) fail(401, 'Sesión inválida o expirada');\n  const u = rows('Usuarios').find(x => x.usuario_id === s.usuario_id && x.estado === 'ACTIVO');\n  if (!u) fail(401, 'Usuario inactivo o inexistente');\n  if (req.usuario_id && req.usuario_id !== u.usuario_id) fail(403, 'No puedes acceder al perfil de otra persona');\n  return { user:u, session:s };\n}\nfunction linked(uid) { return rows('Vinculaciones').find(x => x.usuario_id === uid && x.estado === 'ACTIVA'); }\nfunction eventTime(e) {\n  const s = String(e.fecha) + 'T' + String(e.hora).slice(0,5) + ':00' + cfg.eventTimezoneOffset;\n  const t = Date.parse(s);\n  if (!Number.isFinite(t)) fail(400, 'Fecha u hora del evento inválida');\n  return t;\n}\nfunction activeRegistration(r) { return ['CONFIRMADA','LISTA_ESPERA'].includes(r.estado); }\nfunction available(e, registrations) {\n  return Math.max(0, Number(e.capacidad) - registrations.filter(r => r.evento_id === e.evento_id && r.estado === 'CONFIRMADA').length);\n}\nfunction notify(uid, type, title, message, eid='', iid='', key='') {\n  notifications.push({usuario_id:uid,tipo:type,titulo:title,mensaje:message,evento_id:eid,inscripcion_id:iid,clave_idempotencia:key || [uid,type,eid,iid,iso].join('|')});\n}\nfunction auditUser(uid, action, detail) {\n  put('Auditoria_Usuarios',{auditoria_id:id('AUD'),usuario_id:uid,accion:action,fecha:iso,resultado:'EXITOSO',detalle:detail});\n}\nfunction auditRegistration(r, action, previous) {\n  put('Auditoria_Inscripciones',{auditoria_id:id('AUD'),inscripcion_id:r.inscripcion_id,usuario_id:r.usuario_id,evento_id:r.evento_id,accion:action,estado_anterior:previous,estado_nuevo:r.estado,fecha:iso,resultado:'EXITOSO',detalle:'Operación validada en n8n'});\n}\nfunction result() { return [{json:{writes,notifications,status,response,mode:ctx.mode,chat_id:ctx.chat_id || ''}}]; }\n\ntry {\n  const op=String(req.operacion||'').toUpperCase();\n  const all=rows('Eventos');\n  const old=all.find(x=>x.evento_id===req.evento_id);\n  if(op==='READ') {\n    if(req.evento_id && !old) fail(404,'Evento no encontrado');\n    response={ok:true,eventos:req.evento_id?[old]:all};\n  } else {\n    if(!['CREATE','UPDATE','CANCEL','CLOSE'].includes(op)) fail(400,'Operación permitida: CREATE, READ, UPDATE, CANCEL, CLOSE');\n    if(op!=='CREATE' && !old) fail(404,'Evento no encontrado');\n    let e;\n    if(op==='CREATE' || op==='UPDATE') {\n      const get=k=>(req[k]!==undefined && req[k]!=='')?req[k]:old?.[k];\n      const state=String(get('estado')||'BORRADOR').toUpperCase();\n      if(!['BORRADOR','PUBLICADO','CERRADO','CANCELADO'].includes(state)) fail(400,'Estado inválido');\n      e={evento_id:old?.evento_id||id('EVT'),nombre:text(get('nombre'),'nombre',3,150),categoria:text(get('categoria'),'categoria',2,80),descripcion:text(get('descripcion'),'descripcion',5,3000),fecha:text(get('fecha'),'fecha',10,10),hora:text(get('hora'),'hora',5,5),lugar:text(get('lugar'),'lugar',3,200),capacidad:number(get('capacidad'),'capacidad',1),imagen_url:String(get('imagen_url')||''),organizador:text(get('organizador'),'organizador',2,150),estado:state,fecha_creacion:old?.fecha_creacion||iso,fecha_actualizacion:iso};\n      if(!/^\\d{4}-\\d{2}-\\d{2}$/.test(e.fecha) || !/^([01]\\d|2[0-3]):[0-5]\\d$/.test(e.hora)) fail(400,'Usa fecha AAAA-MM-DD y hora HH:mm');\n      const parsedDate=new Date(e.fecha+'T12:00:00Z');\n      if(!Number.isFinite(parsedDate.getTime()) || parsedDate.toISOString().slice(0,10)!==e.fecha) fail(400,'Fecha de calendario inválida');\n      if(e.imagen_url && !/^https:\\/\\//i.test(e.imagen_url)) fail(400,'imagen_url debe ser HTTPS');\n      if(state==='PUBLICADO' && eventTime(e)<=now.getTime()) fail(400,'Un evento publicado debe tener fecha futura');\n      const confirmed=rows('Inscripciones').filter(r=>r.evento_id===e.evento_id && r.estado==='CONFIRMADA').length;\n      if(e.capacidad<confirmed) fail(409,'Capacidad inferior a inscripciones confirmadas');\n    } else e={...old,estado:op==='CANCEL'?'CANCELADO':'CERRADO',fecha_actualizacion:iso};\n    put('Eventos',e);\n    put('Auditoria_Eventos',{auditoria_id:id('AUD'),evento_id:e.evento_id,accion:op,fecha:iso,resultado:'EXITOSO',detalle:'Administración exclusiva por formulario protegido'});\n    if(old) for(const r of rows('Inscripciones').filter(r=>r.evento_id===e.evento_id && activeRegistration(r))) {\n      if(e.estado==='CANCELADO') {\n        const next=put('Inscripciones',{...r,estado:'CANCELADA',fecha_actualizacion:iso});\n        auditRegistration(next,'CANCELACION_EVENTO',r.estado);\n      }\n      notify(r.usuario_id,e.estado==='CANCELADO'?'EVENTO_CANCELADO':'EVENTO_ACTUALIZADO','Cambio en '+e.nombre,e.estado==='CANCELADO'?'El evento fue cancelado. Tu inscripción quedó cancelada.':'El organizador modificó el evento. Consulta los detalles actualizados.',e.evento_id,r.inscripcion_id,[r.usuario_id,e.evento_id,'CAMBIO',iso].join('|'));\n    }\n    response={ok:true,evento:e};status=op==='CREATE'?201:200;\n  }\n} catch(e) { status=e.http||500;response={ok:false,mensaje:e.http?e.message:'Error interno; revisa la ejecución en n8n'}; }\nreturn result();\n"
+        "jsCode": "const SCHEMAS={\"Usuarios\": [\"usuario_id\", \"nombre\", \"email_normalizado\", \"password_hash\", \"password_salt\", \"estado\", \"fecha_registro\", \"fecha_actualizacion\"], \"Auditoria_Usuarios\": [\"auditoria_id\", \"usuario_id\", \"accion\", \"fecha\", \"resultado\", \"detalle\"], \"Sesiones\": [\"session_id\", \"usuario_id\", \"session_token\", \"creada_en\", \"expira_en\", \"estado\", \"cerrada_en\", \"ultima_validacion\"], \"Codigos_Vinculacion\": [\"codigo_id\", \"usuario_id\", \"codigo\", \"creado_en\", \"expira_en\", \"estado\", \"usado_en\"], \"Vinculaciones\": [\"vinculacion_id\", \"usuario_id\", \"chat_id\", \"telegram_username\", \"fecha_vinculacion\", \"estado\"], \"Eventos\": [\"evento_id\", \"nombre\", \"categoria\", \"descripcion\", \"fecha\", \"hora\", \"lugar\", \"capacidad\", \"imagen_url\", \"organizador\", \"estado\", \"fecha_creacion\", \"fecha_actualizacion\"], \"Auditoria_Eventos\": [\"auditoria_id\", \"evento_id\", \"accion\", \"fecha\", \"resultado\", \"detalle\"], \"Consultas_Catalogo\": [\"consulta_id\", \"fecha\", \"tipo\", \"evento_id\", \"categoria\", \"resultado_count\", \"visitor_id\", \"status_http\"], \"Inscripciones\": [\"inscripcion_id\", \"usuario_id\", \"evento_id\", \"estado\", \"fecha_inscripcion\", \"fecha_actualizacion\", \"nombre_acreditacion\", \"observaciones\", \"origen\", \"orden_espera\"], \"Auditoria_Inscripciones\": [\"auditoria_id\", \"inscripcion_id\", \"usuario_id\", \"evento_id\", \"accion\", \"estado_anterior\", \"estado_nuevo\", \"fecha\", \"resultado\", \"detalle\"], \"Reasignaciones\": [\"reasignacion_id\", \"evento_id\", \"inscripcion_id\", \"usuario_id\", \"fecha\", \"orden_lista\", \"estado_anterior\", \"estado_nuevo\", \"resultado_notificacion\"], \"Recordatorios\": [\"recordatorio_id\", \"usuario_id\", \"evento_id\", \"inscripcion_id\", \"tipo_recordatorio\", \"fecha_programada\", \"fecha_envio\", \"estado\", \"clave_idempotencia\"], \"Notificaciones\": [\"notificacion_id\", \"usuario_id\", \"tipo\", \"titulo\", \"mensaje\", \"evento_id\", \"inscripcion_id\", \"fecha\", \"gmail_estado\", \"telegram_estado\", \"gmail_error\", \"telegram_error\", \"clave_idempotencia\"], \"Conversaciones\": [\"conversation_id\", \"usuario_id\", \"visitor_id\", \"fecha_inicio\", \"fecha_ultima_interaccion\", \"estado\"], \"Mensajes\": [\"message_id\", \"conversation_id\", \"usuario_id\", \"visitor_id\", \"rol\", \"mensaje\", \"timestamp\"]};\nconst operationUuid = $('Generar ID operación').first().json.operacion_uuid;\nlet idCounter = 0;\nif (!operationUuid) throw new Error('Falta el UUID de Generar ID operación');\nconst ctx = $('Configuración').first().json;\nconst req = ctx.request || {};\nconst cfg = ctx.config;\nconst now = new Date();\nconst iso = now.toISOString();\nconst writes = {};\nconst notifications = [];\nlet status = 200;\nlet response = {};\nfunction rows(sheet) {\n  return $('Leer ' + sheet).all().map(x => x.json).filter(x => x && Object.keys(x).some(k => k !== 'row_number'));\n}\nfunction id(prefix) { return prefix + '_' + operationUuid + '_' + (++idCounter); }\nfunction put(sheet, row) {\n  const cols = SCHEMAS[sheet];\n  const clean = {};\n  for (const k of cols) clean[k] = row[k] === undefined || row[k] === null ? '' : row[k];\n  (writes[sheet] ||= []).push(clean);\n  return clean;\n}\nfunction fail(code, message) { const e = new Error(message); e.http = code; throw e; }\nfunction text(value, name, min=1, max=200) {\n  if (typeof value !== 'string') fail(400, name + ' debe ser texto');\n  const s = value.trim();\n  if (s.length < min || s.length > max) fail(400, name + ' tiene una longitud inválida');\n  return s;\n}\nfunction email(value) {\n  const s = text(value, 'email', 3, 254).toLowerCase();\n  if (!/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(s)) fail(400, 'Email inválido');\n  return s;\n}\nfunction number(value, name, min=0, max=100000) {\n  if (value === '' || value === null || value === undefined || typeof value === 'boolean') fail(400, name + ' es obligatorio');\n  const n = Number(value);\n  if (!Number.isInteger(n) || n < min || n > max) fail(400, name + ' inválido');\n  return n;\n}\nfunction publicUser(u) {\n  const { usuario_id, nombre, email_normalizado, estado, fecha_registro, fecha_actualizacion } = u;\n  return { usuario_id, nombre, email_normalizado, estado, fecha_registro, fecha_actualizacion };\n}\nfunction token() {\n  return String(ctx.headers?.authorization || '').replace(/^Bearer\\s+/i, '').trim() || String(req.session_token || '').trim();\n}\nfunction auth() {\n  const t = token();\n  if (!t) fail(401, 'Sesión requerida');\n  const s = rows('Sesiones').find(x => x.session_token === t);\n  if (!s || s.estado !== 'ACTIVA' || !Number.isFinite(Date.parse(s.expira_en)) || Date.parse(s.expira_en) <= now.getTime()) fail(401, 'Sesión inválida o expirada');\n  const u = rows('Usuarios').find(x => x.usuario_id === s.usuario_id && x.estado === 'ACTIVO');\n  if (!u) fail(401, 'Usuario inactivo o inexistente');\n  if (req.usuario_id && req.usuario_id !== u.usuario_id) fail(403, 'No puedes acceder al perfil de otra persona');\n  return { user:u, session:s };\n}\nfunction linked(uid) { return rows('Vinculaciones').find(x => x.usuario_id === uid && x.estado === 'ACTIVA'); }\nfunction eventTime(e) {\n  const s = String(e.fecha) + 'T' + String(e.hora).slice(0,5) + ':00' + cfg.eventTimezoneOffset;\n  const t = Date.parse(s);\n  if (!Number.isFinite(t)) fail(400, 'Fecha u hora del evento inválida');\n  return t;\n}\nfunction activeRegistration(r) { return ['CONFIRMADA','LISTA_ESPERA'].includes(r.estado); }\nfunction available(e, registrations) {\n  return Math.max(0, Number(e.capacidad) - registrations.filter(r => r.evento_id === e.evento_id && r.estado === 'CONFIRMADA').length);\n}\nfunction notify(uid, type, title, message, eid='', iid='', key='') {\n  notifications.push({usuario_id:uid,tipo:type,titulo:title,mensaje:message,evento_id:eid,inscripcion_id:iid,clave_idempotencia:key || [uid,type,eid,iid,iso].join('|')});\n}\nfunction auditUser(uid, action, detail) {\n  put('Auditoria_Usuarios',{auditoria_id:id('AUD'),usuario_id:uid,accion:action,fecha:iso,resultado:'EXITOSO',detalle:detail});\n}\nfunction auditRegistration(r, action, previous) {\n  put('Auditoria_Inscripciones',{auditoria_id:id('AUD'),inscripcion_id:r.inscripcion_id,usuario_id:r.usuario_id,evento_id:r.evento_id,accion:action,estado_anterior:previous,estado_nuevo:r.estado,fecha:iso,resultado:'EXITOSO',detalle:'Operación validada en n8n'});\n}\nfunction result() { return [{json:{writes,notifications,status,response,mode:ctx.mode,chat_id:ctx.chat_id || ''}}]; }\n\ntry {\n  const op=String(req.operacion||'').toUpperCase();\n  const all=rows('Eventos');\n  const old=op==='CREATE'?undefined:all.find(x=>x.evento_id===req.evento_id);\n  if(op==='READ') {\n    if(req.evento_id && !old) fail(404,'Evento no encontrado');\n    response={ok:true,eventos:req.evento_id?[old]:all};\n  } else {\n    if(!['CREATE','UPDATE','CANCEL','CLOSE'].includes(op)) fail(400,'Operación permitida: CREATE, READ, UPDATE, CANCEL, CLOSE');\n    if(op!=='CREATE' && !old) fail(404,'Evento no encontrado');\n    if(old && rows('Inscripciones').some(r=>r.evento_id===old.evento_id && activeRegistration(r)) && (!cfg.workflowNotificaciones || cfg.workflowNotificaciones.startsWith('SELECCIONAR_'))) fail(409,'Configura WF09 antes de modificar un evento con inscripciones activas');\n    let e;\n    if(op==='CREATE' || op==='UPDATE') {\n      const get=k=>(req[k]!==undefined && req[k]!=='')?req[k]:old?.[k];\n      const categoria=text(get('categoria'),'categoria',2,80).toUpperCase();\n      if(categoria!=='EMPRENDIMIENTO') fail(400,'La categoría debe ser EMPRENDIMIENTO');\n      const state=String(get('estado')||'BORRADOR').toUpperCase();\n      if(!['BORRADOR','PUBLICADO','CERRADO','CANCELADO'].includes(state)) fail(400,'Estado inválido');\n      e={evento_id:old?.evento_id||id('EVT'),nombre:text(get('nombre'),'nombre',3,150),categoria,descripcion:text(get('descripcion'),'descripcion',5,3000),fecha:text(get('fecha'),'fecha',10,10),hora:text(get('hora'),'hora',5,5),lugar:text(get('lugar'),'lugar',3,200),capacidad:number(get('capacidad'),'capacidad',1),imagen_url:String(get('imagen_url')||''),organizador:text(get('organizador'),'organizador',2,150),estado:state,fecha_creacion:old?.fecha_creacion||iso,fecha_actualizacion:iso};\n      if(!/^\\d{4}-\\d{2}-\\d{2}$/.test(e.fecha) || !/^([01]\\d|2[0-3]):[0-5]\\d$/.test(e.hora)) fail(400,'Usa fecha AAAA-MM-DD y hora HH:mm');\n      const parsedDate=new Date(e.fecha+'T12:00:00Z');\n      if(!Number.isFinite(parsedDate.getTime()) || parsedDate.toISOString().slice(0,10)!==e.fecha) fail(400,'Fecha de calendario inválida');\n      if(e.imagen_url && !/^https:\\/\\//i.test(e.imagen_url)) fail(400,'imagen_url debe ser HTTPS');\n      if(state==='PUBLICADO' && eventTime(e)<=now.getTime()) fail(400,'Un evento publicado debe tener fecha futura');\n      const confirmed=rows('Inscripciones').filter(r=>r.evento_id===e.evento_id && r.estado==='CONFIRMADA').length;\n      if(e.capacidad<confirmed) fail(409,'Capacidad inferior a inscripciones confirmadas');\n    } else e={...old,estado:op==='CANCEL'?'CANCELADO':'CERRADO',fecha_actualizacion:iso};\n    put('Eventos',e);\n    put('Auditoria_Eventos',{auditoria_id:id('AUD'),evento_id:e.evento_id,accion:op,fecha:iso,resultado:'EXITOSO',detalle:'Administración exclusiva por formulario protegido'});\n    if(old) for(const r of rows('Inscripciones').filter(r=>r.evento_id===e.evento_id && activeRegistration(r))) {\n      if(e.estado==='CANCELADO') {\n        const next=put('Inscripciones',{...r,estado:'CANCELADA',fecha_actualizacion:iso});\n        auditRegistration(next,'CANCELACION_EVENTO',r.estado);\n      }\n      notify(r.usuario_id,e.estado==='CANCELADO'?'EVENTO_CANCELADO':'EVENTO_ACTUALIZADO','Cambio en '+e.nombre,e.estado==='CANCELADO'?'El evento fue cancelado. Tu inscripción quedó cancelada.':'El organizador modificó el evento. Consulta los detalles actualizados.',e.evento_id,r.inscripcion_id,[r.usuario_id,e.evento_id,'CAMBIO',iso].join('|'));\n    }\n    response={ok:true,evento:e};status=op==='CREATE'?201:200;\n  }\n} catch(e) { for(const key of Object.keys(writes)) delete writes[key]; notifications.length=0; status=e.http||500;response={ok:false,mensaje:e.http?e.message:'Error interno; revisa la ejecución en n8n'}; }\nreturn result();\n"
       },
-      "id": "22a98411-1d07-4053-a03e-ef0ee56ce949",
+      "id": "bda0ae51-5056-4b44-8024-7763f63893d2",
       "name": "Reglas de negocio",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        1200,
-        0
+        64,
+        544
       ]
     },
     {
       "parameters": {
-        "mode": "runOnceForAllItems",
         "jsCode": "const plan=$('Reglas de negocio').first().json; const list=plan.writes?.['Eventos']||[]; return list.length?list.map(json=>({json})):[{json:{_skip:true}}];"
       },
-      "id": "f43aecd9-85b9-475d-a471-eca93be7f4d4",
+      "id": "d5d22426-de3e-4873-a75c-5e3e117acc3f",
       "name": "Preparar Eventos",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        1500,
-        0
+        368,
+        544
       ]
     },
     {
@@ -230,32 +209,31 @@
         },
         "options": {}
       },
-      "id": "a9d1879f-a3f9-4a9d-bb66-a1e876b17284",
+      "id": "aaea074c-fffc-4d37-9cea-4f06360e4d48",
       "name": "¿Escribir Eventos?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        1800,
-        0
+        672,
+        544
       ]
     },
     {
       "parameters": {
-        "resource": "sheet",
         "operation": "appendOrUpdate",
         "documentId": {
           "__rl": true,
-          "value": "={{ $('Configuración').first().json.config.sheets.EP04_Eventos }}",
-          "mode": "id"
+          "value": "1EOUz26SJx3YJDMqf1kar4us3HbkdjbOy9OrHtV3RO6Y",
+          "mode": "list",
+          "cachedResultName": "EP04_Eventos",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1EOUz26SJx3YJDMqf1kar4us3HbkdjbOy9OrHtV3RO6Y/edit?usp=drivesdk"
         },
         "sheetName": {
           "__rl": true,
-          "value": "Eventos",
-          "mode": "name"
-        },
-        "options": {
-          "cellFormat": "RAW",
-          "useAppend": true
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Eventos",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1EOUz26SJx3YJDMqf1kar4us3HbkdjbOy9OrHtV3RO6Y/edit#gid=0"
         },
         "columns": {
           "mappingMode": "defineBelow",
@@ -411,45 +389,53 @@
           ],
           "attemptToConvertTypes": false,
           "convertFieldsToString": false
+        },
+        "options": {
+          "cellFormat": "RAW",
+          "useAppend": true
         }
       },
-      "id": "5d3da42c-c6be-4db6-b88c-43b944110032",
+      "id": "4d4b572d-7331-497b-a579-98dd10dd157d",
       "name": "Guardar Eventos",
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.7,
       "position": [
-        0,
-        300
+        -1136,
+        848
       ],
       "alwaysOutputData": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "55L4jOkLMnG2B3fi",
+          "name": "Google Sheets account"
+        }
+      },
       "notes": "Selecciona tu credencial Google Sheets OAuth2. Escritura con clave estable y valores RAW."
     },
     {
       "parameters": {
-        "mode": "runOnceForAllItems",
         "jsCode": "return [{json:$('Reglas de negocio').first().json}];"
       },
-      "id": "d7758004-0e1a-438b-8104-a4167e04e8a3",
+      "id": "0622f945-65e4-4bf5-a31c-81fc1aa2f4eb",
       "name": "Continuar Eventos",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        300,
-        300
+        -832,
+        848
       ]
     },
     {
       "parameters": {
-        "mode": "runOnceForAllItems",
         "jsCode": "const plan=$('Reglas de negocio').first().json; const list=plan.writes?.['Inscripciones']||[]; return list.length?list.map(json=>({json})):[{json:{_skip:true}}];"
       },
-      "id": "94dadd8c-0a36-4d74-8721-2e9e87cbaba5",
+      "id": "dd763c08-7943-400d-9a5f-90b97dc0b55c",
       "name": "Preparar Inscripciones",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        600,
-        300
+        -544,
+        848
       ]
     },
     {
@@ -477,32 +463,31 @@
         },
         "options": {}
       },
-      "id": "23b8ddda-c1bc-4f6f-85ec-53420122e985",
+      "id": "d265a9d5-7da6-46cf-95c8-1baf8d33f990",
       "name": "¿Escribir Inscripciones?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        900,
-        300
+        -240,
+        848
       ]
     },
     {
       "parameters": {
-        "resource": "sheet",
         "operation": "appendOrUpdate",
         "documentId": {
           "__rl": true,
-          "value": "={{ $('Configuración').first().json.config.sheets.EP06_Inscripciones }}",
-          "mode": "id"
+          "value": "1cFQwBhsM7j9gq5G4e_S3Fs8acBRXibuxNsCCGmd_u7o",
+          "mode": "list",
+          "cachedResultName": "EP06_Inscripciones",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1cFQwBhsM7j9gq5G4e_S3Fs8acBRXibuxNsCCGmd_u7o/edit?usp=drivesdk"
         },
         "sheetName": {
           "__rl": true,
-          "value": "Inscripciones",
-          "mode": "name"
-        },
-        "options": {
-          "cellFormat": "RAW",
-          "useAppend": true
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Inscripciones",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1cFQwBhsM7j9gq5G4e_S3Fs8acBRXibuxNsCCGmd_u7o/edit#gid=0"
         },
         "columns": {
           "mappingMode": "defineBelow",
@@ -625,45 +610,53 @@
           ],
           "attemptToConvertTypes": false,
           "convertFieldsToString": false
+        },
+        "options": {
+          "cellFormat": "RAW",
+          "useAppend": true
         }
       },
-      "id": "cbe58c6c-3f11-4170-b0bc-31634301c9ae",
+      "id": "716c1db4-4a62-4c11-9446-797703449bb8",
       "name": "Guardar Inscripciones",
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.7,
       "position": [
-        1200,
-        300
+        64,
+        848
       ],
       "alwaysOutputData": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "55L4jOkLMnG2B3fi",
+          "name": "Google Sheets account"
+        }
+      },
       "notes": "Selecciona tu credencial Google Sheets OAuth2. Escritura con clave estable y valores RAW."
     },
     {
       "parameters": {
-        "mode": "runOnceForAllItems",
         "jsCode": "return [{json:$('Reglas de negocio').first().json}];"
       },
-      "id": "08862286-219b-4db8-9df2-9eef32658cae",
+      "id": "e3f69a32-e190-4f16-8f47-30d53aaa6f70",
       "name": "Continuar Inscripciones",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        1500,
-        300
+        368,
+        848
       ]
     },
     {
       "parameters": {
-        "mode": "runOnceForAllItems",
         "jsCode": "const plan=$('Reglas de negocio').first().json; const list=plan.writes?.['Auditoria_Inscripciones']||[]; return list.length?list.map(json=>({json})):[{json:{_skip:true}}];"
       },
-      "id": "6b6b40b8-2d2a-4208-b256-4c48614d0060",
+      "id": "a393c577-5de6-4ce0-86ec-f76fea50f20f",
       "name": "Preparar Auditoria_Inscripciones",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        1800,
-        300
+        672,
+        848
       ]
     },
     {
@@ -691,32 +684,31 @@
         },
         "options": {}
       },
-      "id": "1c7a927f-a753-4216-be4a-118734d7b4a1",
+      "id": "2c64de4d-05ef-49f6-a70c-5e3b0025e934",
       "name": "¿Escribir Auditoria_Inscripciones?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        0,
-        600
+        -1136,
+        1152
       ]
     },
     {
       "parameters": {
-        "resource": "sheet",
         "operation": "appendOrUpdate",
         "documentId": {
           "__rl": true,
-          "value": "={{ $('Configuración').first().json.config.sheets.EP06_Inscripciones }}",
-          "mode": "id"
+          "value": "1cFQwBhsM7j9gq5G4e_S3Fs8acBRXibuxNsCCGmd_u7o",
+          "mode": "list",
+          "cachedResultName": "EP06_Inscripciones",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1cFQwBhsM7j9gq5G4e_S3Fs8acBRXibuxNsCCGmd_u7o/edit?usp=drivesdk"
         },
         "sheetName": {
           "__rl": true,
-          "value": "Auditoria_Inscripciones",
-          "mode": "name"
-        },
-        "options": {
-          "cellFormat": "RAW",
-          "useAppend": true
+          "value": 128045452,
+          "mode": "list",
+          "cachedResultName": "Auditoria_Inscripciones",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1cFQwBhsM7j9gq5G4e_S3Fs8acBRXibuxNsCCGmd_u7o/edit#gid=128045452"
         },
         "columns": {
           "mappingMode": "defineBelow",
@@ -839,45 +831,53 @@
           ],
           "attemptToConvertTypes": false,
           "convertFieldsToString": false
+        },
+        "options": {
+          "cellFormat": "RAW",
+          "useAppend": true
         }
       },
-      "id": "7215d6b9-8f20-4fea-8fd0-7512c893b018",
+      "id": "12368144-8afc-419c-b838-078397ae594b",
       "name": "Guardar Auditoria_Inscripciones",
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.7,
       "position": [
-        300,
-        600
+        -832,
+        1152
       ],
       "alwaysOutputData": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "55L4jOkLMnG2B3fi",
+          "name": "Google Sheets account"
+        }
+      },
       "notes": "Selecciona tu credencial Google Sheets OAuth2. Escritura con clave estable y valores RAW."
     },
     {
       "parameters": {
-        "mode": "runOnceForAllItems",
         "jsCode": "return [{json:$('Reglas de negocio').first().json}];"
       },
-      "id": "e4e3364e-7ccf-4235-b645-ddd6d9368a6b",
+      "id": "7ab2bc19-4aef-44e9-a675-064c0388beab",
       "name": "Continuar Auditoria_Inscripciones",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        600,
-        600
+        -544,
+        1152
       ]
     },
     {
       "parameters": {
-        "mode": "runOnceForAllItems",
         "jsCode": "const plan=$('Reglas de negocio').first().json; const list=plan.writes?.['Auditoria_Eventos']||[]; return list.length?list.map(json=>({json})):[{json:{_skip:true}}];"
       },
-      "id": "c91b3955-6bc6-4797-8dac-fd8467a25752",
+      "id": "a445fb18-4d95-4961-bbd8-abb32fb9ce93",
       "name": "Preparar Auditoria_Eventos",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        900,
-        600
+        -240,
+        1152
       ]
     },
     {
@@ -905,32 +905,31 @@
         },
         "options": {}
       },
-      "id": "d6f0f408-1361-400d-8ddd-f06e6e39b900",
+      "id": "c52dbe4a-cbf8-429b-a3a7-3564961471f8",
       "name": "¿Escribir Auditoria_Eventos?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        1200,
-        600
+        64,
+        1152
       ]
     },
     {
       "parameters": {
-        "resource": "sheet",
         "operation": "appendOrUpdate",
         "documentId": {
           "__rl": true,
-          "value": "={{ $('Configuración').first().json.config.sheets.EP04_Eventos }}",
-          "mode": "id"
+          "value": "1EOUz26SJx3YJDMqf1kar4us3HbkdjbOy9OrHtV3RO6Y",
+          "mode": "list",
+          "cachedResultName": "EP04_Eventos",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1EOUz26SJx3YJDMqf1kar4us3HbkdjbOy9OrHtV3RO6Y/edit?usp=drivesdk"
         },
         "sheetName": {
           "__rl": true,
-          "value": "Auditoria_Eventos",
-          "mode": "name"
-        },
-        "options": {
-          "cellFormat": "RAW",
-          "useAppend": true
+          "value": 1965479462,
+          "mode": "list",
+          "cachedResultName": "Auditoria_Eventos",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1EOUz26SJx3YJDMqf1kar4us3HbkdjbOy9OrHtV3RO6Y/edit#gid=1965479462"
         },
         "columns": {
           "mappingMode": "defineBelow",
@@ -1009,31 +1008,40 @@
           ],
           "attemptToConvertTypes": false,
           "convertFieldsToString": false
+        },
+        "options": {
+          "cellFormat": "RAW",
+          "useAppend": true
         }
       },
-      "id": "0187b727-bec2-4a0a-ac1f-05a923204a56",
+      "id": "80fae23d-be10-4330-9a1f-e16f34a0e1ae",
       "name": "Guardar Auditoria_Eventos",
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.7,
       "position": [
-        1500,
-        600
+        368,
+        1152
       ],
       "alwaysOutputData": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "55L4jOkLMnG2B3fi",
+          "name": "Google Sheets account"
+        }
+      },
       "notes": "Selecciona tu credencial Google Sheets OAuth2. Escritura con clave estable y valores RAW."
     },
     {
       "parameters": {
-        "mode": "runOnceForAllItems",
         "jsCode": "return [{json:$('Reglas de negocio').first().json}];"
       },
-      "id": "b7ee941e-bc8f-4451-a722-fa69e09f511e",
+      "id": "8e5f5867-a3f9-483e-81a7-24437f8c3fbd",
       "name": "Continuar Auditoria_Eventos",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        1800,
-        600
+        672,
+        1152
       ]
     },
     {
@@ -1061,94 +1069,88 @@
         },
         "options": {}
       },
-      "id": "5f084c5f-ba54-4b50-a9ce-c1ae6883d6aa",
+      "id": "e0bee5bd-5870-46fa-abb7-93a452bbffcf",
       "name": "¿Hay notificaciones?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        0,
-        900
+        -1136,
+        1440
       ]
     },
     {
       "parameters": {
-        "mode": "runOnceForAllItems",
         "jsCode": "return $('Reglas de negocio').first().json.notifications.map(json=>({json}));"
       },
-      "id": "a7c0843b-a0e6-47cb-be1b-1215695889da",
+      "id": "12965744-617e-4ab4-a934-5aa07c070916",
       "name": "Preparar notificaciones",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        300,
-        900
+        -832,
+        1440
       ]
     },
     {
       "parameters": {
-        "batchSize": 1,
         "options": {}
       },
-      "id": "0b9133fb-de6d-4618-913e-95a24527e0d7",
+      "id": "7f100295-72e0-4d3e-a9be-d9f8b3e2afe5",
       "name": "Loop notificaciones",
       "type": "n8n-nodes-base.splitInBatches",
       "typeVersion": 3,
       "position": [
-        600,
-        900
+        -544,
+        1440
       ]
     },
     {
       "parameters": {
-        "source": "database",
         "workflowId": {
           "__rl": true,
           "value": "={{ $('Configuración').first().json.config.workflowNotificaciones }}",
           "mode": "id"
         },
-        "mode": "once",
         "options": {
           "waitForSubWorkflow": true
         }
       },
-      "id": "a5a4feba-8539-4b09-82c7-2cff3f4e9828",
+      "id": "e003740f-9b02-4bd4-8749-b1e68bdc08ae",
       "name": "Notificar WF09",
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
       "position": [
-        900,
-        900
+        -240,
+        1440
       ],
-      "onError": "continueRegularOutput",
       "alwaysOutputData": true,
+      "onError": "continueRegularOutput",
       "notes": "Configura workflowNotificaciones con el ID real de WF09 después de importarlo. Se ejecuta una notificación por vez."
     },
     {
       "parameters": {
-        "mode": "runOnceForAllItems",
         "jsCode": "return [{json:{notification:$('Loop notificaciones').first().json,result:$input.first().json}}];"
       },
-      "id": "a6d7ebab-7577-43d4-b3f9-041806bfca2f",
+      "id": "303b4649-8d9b-49c2-b0f3-63c356437e34",
       "name": "Capturar resultado notificación",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        1200,
-        900
+        64,
+        1440
       ]
     },
     {
       "parameters": {
-        "mode": "runOnceForAllItems",
         "jsCode": "const plan=JSON.parse(JSON.stringify($('Reglas de negocio').first().json));\nconst results=$input.all().map(x=>x.json).filter(x=>x.notification && x.result);\nconst done=results.map(x=>({clave_idempotencia:x.notification.clave_idempotencia,...x.result}));\nif(plan.notifications.length) plan.response.notificaciones=done;\nplan.writes={};\nreturn [{json:plan}];"
       },
-      "id": "4b5222a7-b23f-4726-ba89-52744c5601ba",
+      "id": "58e8aaff-9c8b-41c2-abdd-1fda2b50226a",
       "name": "Resultado final",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        1500,
-        900
+        368,
+        1440
       ]
     },
     {
@@ -1167,31 +1169,31 @@
           }
         }
       },
-      "id": "c7b96272-3653-4e8f-8b47-f251b31d1224",
+      "id": "77f43569-4e66-40c3-a8ca-c9b00ed26eb1",
       "name": "Responder JSON",
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.4,
       "position": [
-        1800,
-        900
+        672,
+        1440
       ]
     },
     {
       "parameters": {
-        "content": "## WF04_eventos_crud\n1. Edita Configuración: IDs de Sheets.\n2. Selecciona credenciales en cada integración.\n3. Configura WF09 en Execute Sub-workflow.\n4. Lee README y prueba antes de publicar.\nGenerado para importar; no verificado contra tu Docker.\nUsuarios existentes: el hash debe usar scrypt compatible.",
-        "height": 250,
-        "width": 520
+        "action": "generate",
+        "dataPropertyName": "operacion_uuid"
       },
-      "id": "566a61b0-ce8a-44d7-9ad5-eeaf1f07c25e",
-      "name": "LEER ANTES DE ACTIVAR",
-      "type": "n8n-nodes-base.stickyNote",
+      "id": "64aacb6d-6f3c-44a0-8cb6-2d5ca2bf7217",
+      "name": "Generar ID operación",
+      "type": "n8n-nodes-base.crypto",
       "typeVersion": 1,
       "position": [
-        0,
-        -330
+        -688,
+        368
       ]
     }
   ],
+  "pinData": {},
   "connections": {
     "Formulario administrador": {
       "main": [
@@ -1208,7 +1210,7 @@
       "main": [
         [
           {
-            "node": "Leer Eventos",
+            "node": "Generar ID operación",
             "type": "main",
             "index": 0
           }
@@ -1531,19 +1533,30 @@
           }
         ]
       ]
+    },
+    "Generar ID operación": {
+      "main": [
+        [
+          {
+            "node": "Leer Eventos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
-  "active": false,
+  "active": true,
   "settings": {
     "executionOrder": "v1",
-    "timezone": "America/Bogota",
-    "saveDataSuccessExecution": "none",
-    "saveDataErrorExecution": "none",
-    "saveManualExecutions": false,
-    "executionTimeout": 300
+    "binaryMode": "separate"
   },
-  "tags": [],
+  "versionId": "151fb009-a09f-42ec-a01b-0b6210eaf305",
   "meta": {
-    "templateCredsSetupCompleted": false
-  }
+    "templateCredsSetupCompleted": true,
+    "instanceId": "8870ad36925f8f4776afd66fcc7d35e30431f422812b897599ebae4cef0121f7"
+  },
+  "nodeGroups": [],
+  "id": "9Fec6gBcfqMEU5V0",
+  "tags": []
 }

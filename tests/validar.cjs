@@ -11,6 +11,14 @@ let passed=0;
 function test(name,fn){fn();passed++;console.log('OK '+name);}
 function mockMap(data){return name=>({first:()=>({json:(data[name]||[{}])[0]}),all:()=>(data[name]||[{}]).map(json=>({json})),isExecuted:name in data});}
 function runNode(wf,name,data,input=[{}]){
+ // Salidas Crypto simuladas: estas pruebas no ejecutan n8n.
+ data={...data};
+ for(const node of wf.nodes.filter(n=>n.type==='n8n-nodes-base.crypto')){
+  const p=node.parameters;
+  if(p.action==='generate')data[node.name]||=[{[p.dataPropertyName]:p.encodingType==='hex'?crypto.randomBytes(64).toString('hex').slice(0,p.stringLength):crypto.randomUUID()}];
+  if(node.name==='Hash sesión')data[node.name]||=[{session_digest:crypto.createHash('sha256').update('DEMO').digest('hex')}];
+ }
+
  const code=wf.nodes.find(n=>n.name===name)?.parameters.jsCode;
  assert.ok(code,'No existe Code node '+name);
  return new Function('$','$input','require','Buffer',code)(mockMap(data),{first:()=>({json:input[0]}),all:()=>input.map(json=>({json}))},require,Buffer).map(x=>x.json);
@@ -35,10 +43,10 @@ function atBogota(date){const d=new Date(date.getTime()-5*3600000);return {fecha
 const event={evento_id:'EVT1',nombre:'Tienda virtual',categoria:'Emprendimiento',descripcion:'Aprende a crear tu tienda',...atBogota(future),lugar:'Bogotá',capacidad:1,imagen_url:'',organizador:'Emprende365',estado:'PUBLICADO',fecha_creacion:new Date().toISOString(),fecha_actualizacion:new Date().toISOString()};
 const db={Usuarios:[],Sesiones:[],Vinculaciones:[],Eventos:[event],Inscripciones:[],Recordatorios:[],Notificaciones:[],Codigos_Vinculacion:[]};
 let user,token,registration,linkCode;
-test('10 workflows inactivos, sin credenciales, nombres y conexiones válidos',()=>{
- assert.equal(workflows.length,10);
- for(const wf of workflows){assert.equal(wf.active,false);const names=new Set(wf.nodes.map(n=>n.name));assert.equal(names.size,wf.nodes.length);const ids=new Set(wf.nodes.map(n=>n.id));assert.equal(ids.size,wf.nodes.length);
-  for(const nd of wf.nodes){assert.ok(!nd.credentials);if(nd.type==='n8n-nodes-base.code')new Function('$','$input','require','Buffer',nd.parameters.jsCode);}
+test('11 workflows con nombres, sintaxis y conexiones válidos',()=>{
+ assert.equal(workflows.length,11);
+ for(const wf of workflows){const names=new Set(wf.nodes.map(n=>n.name));assert.equal(names.size,wf.nodes.length);const ids=new Set(wf.nodes.map(n=>n.id));assert.equal(ids.size,wf.nodes.length);
+  for(const nd of wf.nodes){if(nd.type==='n8n-nodes-base.code')new Function('$','$input','require','Buffer',nd.parameters.jsCode);}
   for(const [from,types] of Object.entries(wf.connections)){assert.ok(names.has(from));for(const outputs of Object.values(types))for(const list of outputs)for(const edge of list)assert.ok(names.has(edge.node));}
  }
 });

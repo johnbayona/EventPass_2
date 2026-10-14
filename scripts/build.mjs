@@ -1,7 +1,9 @@
+import {validateConfig} from './validar-config.mjs';
 import fs from 'node:fs';
 import path from 'node:path';
 import {root,getConfig,configModule} from './config.mjs';
 const config=getConfig();
+validateConfig(config,{production:process.argv.includes('--production') || process.env.VERCEL==='1'});
 if(!config.n8nBaseUrl)console.warn('Sin VITE_N8N_BASE_URL: la interfaz compila, pero no podrá consultar n8n.');
 for(const url of [config.n8nBaseUrl,config.chatUrl,...Object.values(config.endpoints)].filter(Boolean)){
   const parsed=new URL(url);if(!['http:','https:'].includes(parsed.protocol))throw new Error('La configuración debe usar HTTP/HTTPS');
